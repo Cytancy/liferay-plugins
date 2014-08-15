@@ -67,6 +67,16 @@
 		list-style: none;
 		padding: 5px;
 
+		.dockbar-user-notifications-list {
+			max-height: 215px;
+			overflow-x: hidden;
+			overflow-y: auto;
+
+			.user-notification.unread:last-child {
+				margin-bottom: 0;
+			}
+		}
+
 		.message {
 			padding: 5px;
 			text-align: center;

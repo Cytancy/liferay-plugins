@@ -69,6 +69,10 @@ List<Long> userNotificationEventIds = new ArrayList<Long>();
 
 <c:choose>
 	<c:when test='<%= filter.equals("dockbar") %>'>
+		<li class="message">
+			<div class="dockbarMarkAllAsRead"></div>
+		</li>
+
 		<div class="dockbar-user-notifications-list">
 
 			<%
@@ -133,9 +137,6 @@ List<Long> userNotificationEventIds = new ArrayList<Long>();
 
 		</div>
 
-		<li class="message">
-			<div class="dockbarMarkAllAsRead"></div>
-		</li>
 		<li class="bottom message">
 			<liferay-portlet:renderURL plid="<%= notificationsPlid %>" portletName="<%= PortletKeys.NOTIFICATIONS %>" var="viewAllNotifications" windowState="<%= LiferayWindowState.MAXIMIZED.toString() %>">
 				<portlet:param name="mvcPath" value="/notifications/view.jsp" />
