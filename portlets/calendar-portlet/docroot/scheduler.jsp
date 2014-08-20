@@ -43,7 +43,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideDayView %>">
 		window.<portlet:namespace />dayView = new A.SchedulerDayView(
 			{
-				height: 700,
+				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>,
 				strings: {
@@ -56,7 +56,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideWeekView %>">
 		window.<portlet:namespace />weekView = new A.SchedulerWeekView(
 			{
-				height: 700,
+				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>,
 				strings: {
@@ -69,7 +69,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideMonthView %>">
 		window.<portlet:namespace />monthView = new A.SchedulerMonthView(
 			{
-				height: 700,
+				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>
 			}
@@ -79,7 +79,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideAgendaView %>">
 		window.<portlet:namespace />agendaView = new A.SchedulerAgendaView(
 			{
-				height: 700,
+				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>,
 				strings: {
@@ -101,9 +101,6 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 				editCalendarBookingURL: '<%= HtmlUtil.escapeJS(editCalendarBookingURL) %>',
 				headerTemplate: new A.Template(A.one('#<portlet:namespace />eventRecorderHeaderTpl').html()),
 				permissionsCalendarBookingURL: '<%= HtmlUtil.escapeJS(permissionsCalendarBookingURL) %>',
-				popover: {
-					width: width
-				},
 				portletNamespace: '<portlet:namespace />',
 				viewCalendarBookingURL: '<%= HtmlUtil.escapeJS(viewCalendarBookingURL) %>'
 			}

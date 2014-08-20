@@ -38,11 +38,9 @@ AUI.add(
 
 		var ICON_ADD_EVENT_NODE = 'iconAddEventNode';
 
-		var TPL_ICON_ADD_EVENT_NODE = '<div class="btn-group">' +
-										'<button type="button" class="btn btn-primary calendar-add-event-btn">' +
+		var TPL_ICON_ADD_EVENT_NODE = '<button type="button" class="btn btn-primary calendar-add-event-btn"><div class="add-calendar-booking-text">' +
 											Liferay.Language.get('add-calendar-booking') +
-										'</div>' +
-									'</button>';
+									'</div></button>';
 
 		var TPL_MESSAGE_UPDATE_ALL_INVITED = '<p class="calendar-portlet-confirmation-text">' +
 												Liferay.Language.get('invited-users-will-be-notified') +
@@ -456,7 +454,7 @@ AUI.add(
 
 				instance.invokeService(
 					{
-						'/calendar-portlet.calendarbooking/has-child-calendar-bookings': {
+						'/calendar-portlet/calendarbooking/has-child-calendar-bookings': {
 							parentCalendarBookingId: schedulerEvent.get('calendarBookingId')
 						}
 					},
@@ -1177,8 +1175,6 @@ AUI.add(
 					var activeView = scheduler.get('activeView');
 					var filterCalendarBookings = scheduler.get('filterCalendarBookings');
 
-					CalendarUtil.message(Liferay.Language.get('loading'));
-
 					CalendarUtil.getEvents(
 						instance.getLoadStartDate(activeView),
 						instance.getLoadEndDate(activeView),
@@ -1323,8 +1319,6 @@ AUI.add(
 						if (instance.get('rendered')) {
 							instance.syncEventsUI();
 						}
-
-						CalendarUtil.message(STR_BLANK);
 					},
 
 					sync: function() {
@@ -1940,7 +1934,6 @@ AUI.add(
 							if (instance._hasSaveButton(permissions, calendar, status)) {
 								editGroup.push(
 									{
-										icon: 'icon-hdd',
 										id: 'saveBtn',
 										label: Liferay.Language.get('save'),
 										on: {
@@ -1954,7 +1947,6 @@ AUI.add(
 							if (instance._hasEditButton(permissions, calendar, status)) {
 								editGroup.push(
 									{
-										icon: 'icon-edit',
 										id: 'editBtn',
 										label: Liferay.Language.get('edit'),
 										on: {
@@ -1967,9 +1959,8 @@ AUI.add(
 							if ((schedulerEventCreated === true) && permissions.VIEW_BOOKING_DETAILS) {
 								editGroup.push(
 									{
-										icon: 'icon-eye-open',
 										id: 'viewBtn',
-										label: Liferay.Language.get('view-details'),
+										label: Liferay.Language.get('details'),
 										on: {
 											click: A.bind(instance._handleViewEvent, instance)
 										}
@@ -1980,7 +1971,6 @@ AUI.add(
 							if (schedulerEvent.isMasterBooking() && instance._hasDeleteButton(permissions, calendar, status)) {
 								editGroup.push(
 									{
-										icon: 'icon-trash',
 										id: 'deleteBtn',
 										label: Liferay.Language.get('delete'),
 										on: {
