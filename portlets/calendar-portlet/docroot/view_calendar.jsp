@@ -76,7 +76,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 <aui:container cssClass="calendar-top-bar" />
 
-<aui:container cssClass="testaui">
+<aui:container cssClass="calendar-dropdown-view-menu hide">
 	<liferay-ui:icon-menu direction="down" icon="<%= StringPool.BLANK %>" localizeMessage="<%= true %>" message='<%= _getCurrentView(request, sessionClicksDefaultView) %>'>
 		<liferay-ui:icon
 			iconCssClass="<%= StringPool.BLANK %>"
@@ -114,8 +114,8 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 <%!
 	private String _getCurrentView(HttpServletRequest request, String sessionClicksDefaultView) {
-	String test = ParamUtil.getString(request, "activeView", sessionClicksDefaultView);
-	System.out.println (test);
+		String test = ParamUtil.getString(request, "activeView", sessionClicksDefaultView);
+		System.out.println (test);
 		return  test;
 	}
 %>
@@ -266,12 +266,19 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 		Liferay.CalendarUtil.syncCalendarsMap(calendarLists);
 	}
 
+	console.log("p_p_id" + <portlet:namespace />);
 	var win = A.getWin();
 	var togglerNode = A.one('.calendar-portlet-column-toggler');
 	var topBarNode = A.one('.calendar-top-bar');
 	var caretNode = null;
 	var groupMenuNode = A.one('.scheduler-base-views');
+	var calendarNavMenuNode = A.one('.calendar-navigation-bar');
+	var calendarDropMenuNode = calendarNavMenuNode.one('.calendar-dropdown-view-menu');
+	var todayNode = A.one('.scheduler-base-today');
+	var addEventNode = A.one('.calendar-add-event-btn');
 	var isExpanded = A.one('.calendar-portlet-list-header').hasClass('toggler-header-expanded');
+	var schedulerControlsNode = A.one('.scheduler-base-controls');
+	var schedulerDateNode = A.one('.scheduler-base-view-date');
 	var stateExpanded = isExpanded;
 	var stateMobile = false;
 
@@ -280,6 +287,15 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 	console.log(<portlet:namespace />scheduler.get('views'));
 	console.log((<portlet:namespace />scheduler.get('viewsNode')._node.childNodes[0] instanceof Node));
 	console.log(<portlet:namespace />scheduler.get('viewsNode')._node.childNodes.length);
+
+	var <portlet:namespace />menuOrganizer = function() {
+		topBarNode.insert(schedulerControlsNode, 'after')
+		schedulerControlsNode.insert(addEventNode, calendarDropMenuNode);
+		schedulerControlsNode.insert(schedulerDateNode, schedulerControlsNode.one('scheduler-base-icon-next'));
+		addEventNode.insert(today, 'after');
+		today.insert(today, 'after');
+
+	}
 
 	var <portlet:namespace />collapseOnResize = function() {
 		if (win.width() < 992) {
@@ -308,7 +324,6 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 			A.one('.calendar-portlet-column-grid').insertBefore(togglerNode, A.one('.calendar-portlet-wrapper'))
 
-
 			stateMobile = false;
 		}
 
@@ -328,8 +343,8 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 			}
 		}
 		else {
-			A.one('.scheduler-base-controls').insertBefore(A.one('.scheduler-base-today'), A.one('.scheduler-base-controls .btn-group'));
-			A.one('.scheduler-base-controls').insertBefore(A.one('.calendar-add-event-btn'), A.one('.scheduler-base-controls .scheduler-base-today'));
+			schedulerControlsNode.insertBefore(A.one('.scheduler-base-today'), schedulerControlsNode.one('.btn-group'));
+			schedulerControlsNode.insertBefore(A.one('.calendar-add-event-btn'), schedulerControlsNode.one('.scheduler-base-today'));
 
 			if (groupMenuNode.hasClass('hide'))
 				groupMenuNode.removeClass('hide');
