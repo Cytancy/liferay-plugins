@@ -223,6 +223,14 @@ public class BaseJSONHandler extends BaseHandler {
 			throw new HttpResponseException(
 				HttpStatus.SC_UNAUTHORIZED, "Authenticated access required");
 		}
+		else {
+			SyncFile syncFile = (SyncFile)getParameterValue("syncFile");
+
+			syncFile.setState(SyncFile.STATE_ERROR);
+			syncFile.setUiEvent(SyncFile.UI_EVENT_DEFAULT);
+
+			SyncFileService.update(syncFile);
+		}
 
 		return true;
 	}

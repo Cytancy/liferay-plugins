@@ -25,8 +25,11 @@ import com.liferay.sync.engine.service.persistence.SyncPropPersistence;
 import com.liferay.sync.engine.service.persistence.SyncSitePersistence;
 import com.liferay.sync.engine.service.persistence.SyncWatchEventPersistence;
 import com.liferay.sync.engine.util.FileUtil;
+import com.liferay.sync.engine.util.LoggerUtil;
 import com.liferay.sync.engine.util.PropsValues;
 import com.liferay.sync.engine.util.ReleaseInfo;
+
+import java.io.InputStream;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,11 +46,23 @@ public class UpgradeUtil {
 		if (buildNumber == 0) {
 			createTables();
 
-			Path filePath = Paths.get(
+			Path configurationFilePath = Paths.get(
 				FileUtil.getFilePathName(
-					PropsValues.SYNC_CONFIGURATION_DIRECTORY, "files"));
+					PropsValues.SYNC_CONFIGURATION_DIRECTORY));
 
-			Files.createDirectories(filePath);
+			Files.createDirectories(configurationFilePath.resolve("files"));
+
+			Path loggerConfigurationFilePath = configurationFilePath.resolve(
+				PropsValues.SYNC_LOGGER_CONFIGURATION_FILE);
+
+			if (!Files.exists(loggerConfigurationFilePath)) {
+				ClassLoader classLoader = LoggerUtil.class.getClassLoader();
+
+				InputStream inputStream = classLoader.getResourceAsStream(
+					PropsValues.SYNC_LOGGER_CONFIGURATION_FILE);
+
+				Files.copy(inputStream, loggerConfigurationFilePath);
+			}
 		}
 		else if (buildNumber == ReleaseInfo.getBuildNumber()) {
 			return;
