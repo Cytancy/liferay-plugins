@@ -119,12 +119,6 @@
 	.scheduler-base {
 		.scheduler-view-agenda, .scheduler-view-month, .scheduler-view-week, .scheduler-view-day {
 			padding-top: 45px;
-
-			// [style] {
-			// 	@include respond-to(phone) {
-			// 	   height: 500px !important;
-			// 	}
-			// }
 		}
 	}
 

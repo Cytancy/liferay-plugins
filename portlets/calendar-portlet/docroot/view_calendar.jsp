@@ -76,6 +76,50 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 <aui:container cssClass="calendar-top-bar" />
 
+<aui:container cssClass="testaui">
+	<liferay-ui:icon-menu direction="down" icon="<%= StringPool.BLANK %>" localizeMessage="<%= true %>" message='<%= _getCurrentView(request, sessionClicksDefaultView) %>'>
+		<liferay-ui:icon
+			iconCssClass="<%= StringPool.BLANK %>"
+			localizeMessage="<%= true %>"
+			message="Day"
+			onClick="setView('day');"
+			url="javascript:;"
+		/>
+
+		<liferay-ui:icon
+			iconCssClass="<%= StringPool.BLANK %>"
+			localizeMessage="<%= true %>"
+			message="Week"
+			onClick="setView('week');"
+			url="javascript:;"
+		/>
+
+		<liferay-ui:icon
+			iconCssClass="<%= StringPool.BLANK %>"
+			localizeMessage="<%= true %>"
+			message="Month"
+			onClick="setView('month');"
+			url="javascript:;"
+		/>
+
+		<liferay-ui:icon
+			iconCssClass="<%= StringPool.BLANK %>"
+			localizeMessage="<%= true %>"
+			message="Agenda"
+			onClick="setView('agenda');"
+			url="javascript:;"
+		/>
+	</liferay-ui:icon-menu>
+</aui:container>
+
+<%!
+	private String _getCurrentView(HttpServletRequest request, String sessionClicksDefaultView) {
+	String test = ParamUtil.getString(request, "activeView", sessionClicksDefaultView);
+	System.out.println (test);
+		return  test;
+	}
+%>
+
 <aui:container cssClass="calendar-portlet-column-parent">
 	<aui:row>
 		<aui:col cssClass='<%= "calendar-portlet-column-options " + (columnOptionsVisible ? StringPool.BLANK : "hide") %>' id="columnOptions" span="<%= 3 %>">
@@ -187,6 +231,16 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 <%@ include file="/view_calendar_menus.jspf" %>
 
+<aui:script>
+	var setView = function(viewName) {
+		<portlet:namespace />scheduler.set('activeView',<portlet:namespace />scheduler.getViewByName(viewName));
+	};
+
+	var getViewNodes = function() {
+		return (<portlet:namespace />scheduler.get('viewsNode')._node.childNodes);
+	};
+</aui:script>
+
 <aui:script use="aui-toggler,liferay-calendar-list,liferay-scheduler,liferay-store,json">
 	Liferay.CalendarUtil.USER_CLASS_NAME_ID = <%= PortalUtil.getClassNameId(User.class) %>;
 
@@ -212,19 +266,23 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 		Liferay.CalendarUtil.syncCalendarsMap(calendarLists);
 	}
 
-	var htmlNode = A.one('.aui')
+	var win = A.getWin();
 	var togglerNode = A.one('.calendar-portlet-column-toggler');
 	var topBarNode = A.one('.calendar-top-bar');
 	var caretNode = null;
+	var groupMenuNode = A.one('.scheduler-base-views');
 	var isExpanded = A.one('.calendar-portlet-list-header').hasClass('toggler-header-expanded');
 	var stateExpanded = isExpanded;
 	var stateMobile = false;
-	var widthOffset = 17;
-	var htmlWidth = null;
 
-	var collapseOnResize = function() {
-		htmlWidth = htmlNode.outerWidth() + widthOffset;
-		if (htmlWidth <= 991) {
+	console.log(<portlet:namespace />scheduler.get('activeView'));
+	console.log(<portlet:namespace />scheduler.getViewByName('month'));
+	console.log(<portlet:namespace />scheduler.get('views'));
+	console.log((<portlet:namespace />scheduler.get('viewsNode')._node.childNodes[0] instanceof Node));
+	console.log(<portlet:namespace />scheduler.get('viewsNode')._node.childNodes.length);
+
+	var <portlet:namespace />collapseOnResize = function() {
+		if (win.width() < 992) {
 			caretNode = togglerNode.one('.icon-caret-right');
 			if (caretNode) caretNode.replaceClass('icon-caret-right', 'icon-caret-down');
 
@@ -254,9 +312,12 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 			stateMobile = false;
 		}
 
-		if (htmlWidth <= 767) {
+		if (win.width() < 768) {
 			topBarNode.appendChild(A.one('.scheduler-base-today'));
 			topBarNode.appendChild(A.one('.calendar-add-event-btn'));
+
+			if (!groupMenuNode.hasClass('hide'))
+				groupMenuNode.addClass('hide');
 
 			if (isExpanded) {
 				stateExpanded = A.one('.calendar-portlet-list-header').hasClass('toggler-header-expanded');
@@ -269,6 +330,9 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 		else {
 			A.one('.scheduler-base-controls').insertBefore(A.one('.scheduler-base-today'), A.one('.scheduler-base-controls .btn-group'));
 			A.one('.scheduler-base-controls').insertBefore(A.one('.calendar-add-event-btn'), A.one('.scheduler-base-controls .scheduler-base-today'));
+
+			if (groupMenuNode.hasClass('hide'))
+				groupMenuNode.removeClass('hide');
 
 			if (!isExpanded) {
 				if (stateExpanded) {
@@ -284,9 +348,9 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 	A.all('.glyphicon-chevron-left').replaceClass('glyphicon-chevron-left', 'icon-chevron-left')
 	A.all('.glyphicon-chevron-right').replaceClass('glyphicon-chevron-right', 'icon-chevron-right')
 
-	var resizeCollapser = A.getWin().on(
+	win.on(
 		['resize', 'load'],
-		A.debounce(collapseOnResize, 100)
+		A.debounce(<portlet:namespace />collapseOnResize, 100)
 	);
 
 	window.<portlet:namespace />syncCalendarsMap = syncCalendarsMap;
