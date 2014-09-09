@@ -1,6 +1,22 @@
 @import "compass";
 @import "mixins";
 
+.calendar-add-resource {
+	margin: 10px 0;
+
+	.btn {
+		background-color: #54aaff;
+		border-color: #3b9dff;
+		color: white;
+
+		&:hover {
+			color: white;
+			background-color: #2b96ff;
+			border-color: #007ffc;
+		}
+	}
+}
+
 .calendar-booking-invitations {
 	min-height: 110px;
 
@@ -117,7 +133,7 @@
 	}
 
 	.scheduler-base {
-		.scheduler-view-agenda, .scheduler-view-month, .scheduler-view-week, .scheduler-view-day {
+		.scheduler-view-month, .scheduler-view-week, .scheduler-view-day {
 			padding-top: 45px;
 		}
 	}
@@ -139,10 +155,12 @@
 
 	.popover.scheduler-event-recorder-popover {
 		max-width: none;
+		padding-bottom: 10px;
 	}
 
 	.scheduler-view-agenda-info-container {
 		.scheduler-view-agenda-info {
+			background: #FFF;
 			line-height: 1.2;
 
 			.scheduler-view-agenda-info-biggie {
@@ -163,6 +181,49 @@
 		color: #555;
 		cursor: default;
 		text-decoration: none;
+	}
+}
+
+.calendar-list-display {
+	@include respond-to(phone, tablet) {
+		border-bottom: 1px solid #DDD;
+		margin-bottom: 10px;
+		padding-bottom: 5px;
+	}
+}
+
+.calendar-mobile-header {
+	display: none;
+	overflow: hidden;
+	padding-left: 3px;
+
+	@include respond-to(phone, tablet) {
+		display: block;
+	}
+
+	.header-content {
+		font-size: 24px;
+		color: #777;
+		margin-bottom: 5px;
+		position: relative;
+
+		&:before, &:after{
+			content: "";
+			position: absolute;
+			top: 50%;
+			border-bottom: 1px solid #DDD;
+			width: 400%;
+		}
+
+		&:before {
+			margin-right: .5em;
+			right: 100%;
+		}
+
+		&:after {
+			left: 100%;
+			margin-left: .5em;
+		}
 	}
 }
 
@@ -195,6 +256,25 @@
 	width: 80%;
 }
 
+.calendar-portlet-column-parent  .calendar-portlet-column-options {
+	padding-right: 0;
+
+	@include respond-to(tablet, phone) {
+		padding-right: 15px;
+	}
+
+	.calendar-options-container {
+		height: 500px;
+		border-bottom: 1px solid #DDD;
+		overflow-x: hidden;
+
+		@include respond-to(tablet, phone) {
+			height: auto;
+			border: 0;
+		}
+	}
+}
+
 .calendar-portlet-confirmation-text {
 	padding: 5px;
 }
@@ -208,6 +288,10 @@
 }
 
 .calendar-portlet-event-recorder {
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 8px;
+	padding-bottom: 5px;
+
 	table td {
 		padding: 5px;
 	}
@@ -251,14 +335,9 @@
 	display: block;
 	font-weight: normal;
 	line-height: 35px;
-	margin: 10px 0 0 0;
 	padding: 2px 0;
 	position: relative;
 	text-decoration: none;
-
-	@include respond-to(phone, tablet) {
-		margin: 0;
-	}
 
 	&:hover {
 		background-color: #DCE3EA;
@@ -268,14 +347,23 @@
 	.calendar-list-item-arrow {
 		top: 12px;
 
-		@include respond-to(phone, tablet) {
+		@include respond-to(tablet, phone) {
 			top: 6px;
 		}
 	}
 }
 
-.calendar-portlet-list-text {
+.calendar-portlet-list-text, .calendar-list-item-label {
+	display: inline-block;
+	max-width: calc(100% - 40px);
+	overflow: hidden;
+	text-overflow: ellipsis;
 	vertical-align: middle;
+	white-space: nowrap;
+
+	@include respond-to(tablet, phone) {
+		max-width: calc(100% - 60px);
+	}
 }
 
 .calendar-portlet-recurrence-container {
@@ -343,117 +431,9 @@
 			padding: 0 0 5px 0;
 		}
 	}
-
-	.scheduler-base-controls {
-		width: 100%;
-
-		.btn {
-			margin: 0 8px 0 auto;
-			padding: 7px 15px;
-
-			@include respond-to(phone) {
-				float: right;
-				margin: 0 auto;
-				padding: 6px 0px;
-			}
-		}
-
-		.scheduler-base-view-date {
-			float: right;
-			margin: 10px 10px 0 10px;
-
-			@include respond-to(phone) {
-				border-bottom: 1px solid #cfcfcf;
-				border-top: 1px solid #cfcfcf;
-				float: none;
-				font-weight: bold;
-				height: 39px;
-				left: 0;
-				line-height: 39px;
-				margin: 0 auto;
-				overflow: hidden;
-				position: absolute;
-				right: 0;
-				text-align: center;
-				top: 52px;
-				vertical-align: middle;
-				width: calc(70% - 34px);
-			}
-		}
-
-		.glyphicon {
-			top: 0;
-		}
-
-		.scheduler-base-icon-next, .scheduler-base-icon-prev {
-			width: 50%;
-		}
-
-		.add-calendar-booking-text {
-			display: inline-block;
-
-			@include respond-to(phone) {
-				clip: rect(0 0 0 0);
-				height: 1px; width: 1px;
-				margin: -1px; padding: 0; border: 0;
-				overflow: hidden;
-				position: absolute;
-			}
-		}
-
-		.btn-group {
-			float: right;
-
-			@include respond-to(phone) {
-				margin: 0;
-				padding: 0;
-				position: absolute;
-				top: 52px;
-				width: calc(100% - 30px);
-			}
-
-			.btn {
-				margin-right: 0;
-
-				@include respond-to(phone) {
-					float: left;
-					width: 15%;
-				}
-			}
-
-			.scheduler-base-icon-prev {
-				@include respond-to(phone) {
-					margin-left: 7px;
-				}
-			}
-
-			.scheduler-base-icon-next {
-				@include respond-to(phone) {
-					float: right;
-					margin-right: 7px;
-				}
-			}
-		}
-	}
-
-	.scheduler-base-content .scheduler-base-views {
-		margin-top: 6px;
-
-		@include respond-to(phone) {
-			margin-top: 0;
-			width: 100%;
-
-			.btn {
-				margin-top: 0;
-				padding-left: 0;
-				padding-right: 0;
-				width: calc(25% - -0.7px)
-			}
-		}
-	}
 }
 
-.calendar-portlet-column-toggler {
+.calendar-portlet .calendar-portlet-column-toggler {
 	bottom: 0;
 	margin-left: -10px;
 	position: absolute;
@@ -465,21 +445,7 @@
 		cursor: pointer;
 	}
 
-	.icon-caret-right, .icon-caret-left, .icon-caret-down, .icon-caret-up {
-		left: 50%;
-		margin: -14px 0 0 -1px;
-		position: absolute;
-		top: 50%;
-	}
-}
-
-.calendar-top-bar {
-	position: absolute;
-	right: 15px;
-	top: 42px;
-	width: calc(100% - 30px);
-
-	.btn {
+	@include respond-to(tablet, phone) {
 		float: right;
 		height: 32px;
 		margin: 0 0 0 5px;
@@ -488,30 +454,19 @@
 		width: 15%;
 	}
 
-	.add-calendar-booking-text {
-		clip: rect(0 0 0 0);
-		height: 1px; width: 1px;
-		margin: -1px; padding: 0; border: 0;
-		overflow: hidden;
+	.icon-caret-right, .icon-caret-left, .icon-caret-down, .icon-caret-up {
+		left: 50%;
+		margin: -14px 0 0 -1px;
 		position: absolute;
-	}
+		top: 50%;
 
-	.calendar-portlet-column-toggler {
-		.icon-caret-right, .icon-caret-left, .icon-caret-down, .icon-caret-up {
+		@include respond-to(tablet, phone) {
 			left: auto;
 			margin: auto;
 			position: relative;
-			top: 2px;
+			top: 4px;
 		}
 	}
-}
-
-.view-lt480 .scheduler-base-today {
-	clip: rect(0 0 0 0);
-	height: 1px; width: 1px;
-	margin: -1px; padding: 0; border: 0;
-	overflow: hidden;
-	position: absolute;
 }
 
 .dialog-iframe-popup .calendar-portlet .fieldset {
@@ -529,36 +484,303 @@
 	margin-top: -1em;
 }
 
-.scheduler-base-controls .calendar-add-event-btn {
-	display: inline-block;
-	margin-right: 3px;
+// ====================== temporary
+
+.scheduler-view-agenda-info-container .scheduler-view-agenda-info .scheduler-view-agenda-info-biggie {
+	@include respond-to(phone) {
+		width: 75px !important;
+	}
+}
+
+.scheduler-view-scrollable {
+	overflow: visible !important;
+	overflow-x: hidden !important;
+	position: relative !important;
+}
+
+.scheduler-view-month-content th {
+	text-align: right;
+}
+
+.scheduler-view-table-data-col-title {
+	padding: 3px 4px 0 0 !important;
+}
+.container-fluid.calendar-portlet-column-parent {
+	padding: 0 !important;
+}
+
+.scheduler-view-day-header-day {
+	.scheduler-view-day-header-day-number {
+		font-size: 14px !important;
+		float: right;
+		color: #ABAABA !important;
+
+		@media (max-width: 520px) {
+			font-size: 10px !important;
+		}
+	}
+
+	.scheduler-view-day-header-day-weekday {
+		font-size: 14px;
+		margin-right: 5px;
+		float: right;
+		color: #ABAABA !important;
+
+		@media (max-width: 550px) {
+			font-size: 10px;
+			margin-right: 2px;
+		}
+	}
+
+	.scheduler-today-hd {
+		border: none;
+
+		&:after {
+		    clear: both;
+		    content: "";
+		    display: block;
+		    border-bottom: 3px solid #009be6;
+		}
+	}
+}
+
+.scheduler-view-table-header-col .scheduler-view-table-header-day div {
+	padding-bottom: 3px !important;
+	font-size: 14px !important;
+
+	@media (max-width: 550px) {
+		font-size: 10px !important;
+	}
+}
+
+.scheduler-view-agenda-container .scheduler-view-agenda-events .scheduler-view-agenda-event-color {
+	top: 17px !important;
+}
+
+.scheduler-view-agenda-info-container {
+	border: none !important;
+	border-bottom: 1px solid #e4e4e4 !important;
+	@include border-radius(0);
+	margin: 0 !important;
+}
+
+.scheduler-view-agenda-container {
+	margin: 0 !important;
+	border: 0 !important;
+}
+
+.scheduler-view-agenda-container .scheduler-view-agenda-header {
+	border-width: 0 0 1px 0 !important;
+}
+
+.scheduler-view-agenda-info-container .scheduler-view-agenda-info .scheduler-view-agenda-info-biggie {
+	background: none !important;
+}
+
+.scheduler-view-agenda-container .scheduler-view-agenda-events .scheduler-view-agenda-event .scheduler-view-agenda-event-content {
+	padding-left: 20px !important;
+}
+
+.scheduler-view-agenda-event-color {
+	left: 12px !important;
+}
+
+
+.scheduler-view-agenda-container .scheduler-view-agenda-events .scheduler-view-agenda-no-events {
+	background: #F6F6F6;
+	border-bottom: 1px solid #E4E4E4;
+	border-style: solid;
+	padding: 10px;
+	text-align: center;
+	border-width: 0 0 1px 0;
+}
+
+// ===============================
+
+.scheduler-base-controls {
+	display: table;
+	margin-bottom: 10px;
+	padding: 0;
+	width: 100%;
+
+	@include respond-to(tablet) {
+		padding: 0 15px;
+	}
+
+	@include respond-to(phone) {
+		margin-bottom: 2%;
+		padding: 0 15px;
+	}
+
+	.add-calendar-booking-text {
+		display: inline-block;
+	}
+
+	.btn {
+		float: left;
+		margin: 0 8px 0 auto;
+		padding: 7px 15px;
+
+		@include respond-to(phone) {
+			margin: 0 auto;
+			padding: 6px 0px;
+		}
+	}
+
+	.btn-group {
+		float: left;
+
+		.btn {
+			margin-top: 0;
+			margin-right: 0;
+		}
+
+		.scheduler-base-icon-prev, .scheduler-base-icon-next {
+			@include respond-to(phone) {
+				width: 50px;
+			}
+		}
+	}
+
+	.calendar-add-event-btn {
+		@include respond-to(phone) {
+			margin-right: 2%;
+			width: 49%;
+		}
+	}
+
+	.calendar-dropdown-view-menu {
+		display: none;
+
+		@include respond-to(phone) {
+			display: block;
+			margin-bottom: 2%;
+			width: 49%;
+		}
+	}
+
+	.calendar-portlet-column-options {
+		margin-top: 5px;
+		margin-bottom: 15px;
+	}
+
+	.glyphicon {
+		top: 0;
+	}
+
+	.scheduler-base-today {
+		@include respond-to(phone) {
+			width: calc(100% - 100px);
+		}
+	}
+
+	.scheduler-base-views {
+		float: right;
+		padding: 0;
+		width: auto;
+
+		@include respond-to(phone) {
+			display: none;
+		}
+	}
+}
+
+.scheduler-base-view-date {
+	color: #878787;
+	font-size: 24px;
+	margin-top: 13px;
+	position: absolute;
+	text-align: center;
+	width: calc(100% - 30px);
+
+	@include respond-to(phone) {
+		font-size: 18px;
+		height: 30px;
+		overflow: hidden;
+		padding: 0 4%;
+	}
 }
 
 .scheduler-event-past {
 	@include opacity(0.4);
 }
 
-.scheduler-event-recorder-body select {
-	max-width: 340px;
-	width: 100%;
+.scheduler-event-recorder-body {
+	select {
+		margin-bottom: 0;
+		width: 100%;
+	}
+
+	table {
+		width: 100%;
+	}
 }
 
-.scheduler-event-recorder-header .scheduler-event-recorder-content {
-	background: #FAFAFA;
-	border: 1px solid #C4C4C4;
-	outline-width: 0;
-	padding: 7px;
-	width: 90%;
+.scheduler-event-recorder-form {
+	.btn-toolbar {
+		&:before, &:after {
+			display: inline;
+		}
+	}
+
+	.close {
+		line-height: .8;
+		margin: 0;
+	}
+
+	.popover-content {
+		padding-bottom: 0;
+	}
+
+	.popover-footer  {
+		.btn-toolbar {
+			margin: 0;
+			text-align: center;
+
+			.btn-group {
+				float: center;
+				margin: 0;
+			}
+		}
+
+		#saveBtn {
+			color: white;
+			background-color: #54aaff;
+			border-color: #3b9dff;
+			margin-right: 1px;
+
+			&:hover {
+				color: white;
+				background-color: #2b96ff;
+				border-color: #007ffc;
+			}
+		}
+	}
 }
 
-.scheduler-event-recorder-header .scheduler-event-recorder-content:hover {
-	background: #FFC;
-	border-color: #FC0;
+.scheduler-event-recorder-header {
+	.scheduler-event-recorder-content {
+		background: #FAFAFA;
+		border: 1px solid #C4C4C4;
+		outline-width: 0;
+		padding: 7px;
+		width: 91%;
+
+		&:hover {
+			background: #FFC;
+			border-color: #FC0;
+		}
+	}
 }
 
-.scheduler-event-recorder-popover .popover-title .close {
-	margin-top: 5px;
+.scheduler-today .scheduler-view-table {
+	border-top: 3px solid #009be6;
+	margin-top: 8px;
 }
+
+// .scheduler-view-day-header-day {
+// 	display: none;
+// }
 
 .scheduler-view-day .scheduler-view-table .scheduler-view-table-data-col {
 	padding-top: 5px;
@@ -653,14 +875,29 @@
 	background-position: -66px -18px;
 }
 
-.yui3-skin-sam .calendar-portlet-mini-calendar .yui3-calendar-content {
-	background: #FFF !important;
-	border: 1px solid #DDD;
+.yui3-skin-sam .calendar-portlet-mini-calendar {
+	@include respond-to(tablet, phone) {
+		clip: rect(0 0 0 0);
+		height: 1px; width: 1px;
+		margin: -1px; padding: 0; border: 0;
+		overflow: hidden;
+		position: absolute;
+	}
+
+	.yui3-calendar-content {
+		background: #FFF !important;
+		border: 1px solid #DDD;
+	}
 }
 
 /* ---------- YUI calendar ---------- */
 
 .yui3-skin-sam .calendar-portlet {
+	.yui3-calendar {
+		border-bottom: 1px solid #DDD;
+		margin-bottom: 8px;
+	}
+
 	.yui3-calendar-day, .yui3-calendar-header-label, .yui3-calendar-weekday {
 		font-weight: 200;
 	}
@@ -681,6 +918,14 @@
 	.yui3-calendar-day {
 		padding: 7px 0;
 		width: 14.286%;
+
+		&:focus {
+			outline: 0;
+		}
+	}
+
+	.yui3-calendar-nextmonth-day:focus {
+		outline: 0;
 	}
 
 	.yui3-calendar-day:hover, .yui3-calendar-day.yui3-calendar-day-selected:hover, .yui3-calendar-day.yui3-calendar-day-selected.lfr-busy-day:hover {
@@ -712,6 +957,27 @@
 	.yui3-aclist-list {
 		margin: 0;
 	}
+
+	.yui3-calendarnav-prevmonth {
+		margin-left: -5px;
+	}
+
+	.yui3-calendarnav-nextmonth {
+		margin-right: -5px;
+	}
+
+	.yui3-calendar-header {
+		border-top: 1px solid #DDD;
+		border-bottom: 1px solid #DDD;
+		padding: 8px 0;
+		font-size: 16px;
+		margin-bottom: 8px;
+	}
+}
+
+.scheduler-view-agenda-content .yui3-widget-hd {
+	background: #FFF;
+
 }
 
 /* ---------- Extras ---------- */

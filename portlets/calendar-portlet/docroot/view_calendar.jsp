@@ -74,48 +74,42 @@ JSONArray otherCalendarsJSONArray = CalendarUtil.toCalendarsJSONArray(themeDispl
 boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, "calendar-portlet-column-options-visible", "true"));
 %>
 
-<aui:container cssClass="calendar-top-bar" />
+<liferay-ui:icon-menu cssClass="calendar-dropdown-view-menu" direction="down" icon="<%= StringPool.BLANK %>" localizeMessage="<%= true %>" message='<%= _getCurrentView(request, sessionClicksDefaultView) %>'>
+	<liferay-ui:icon
+		iconCssClass="<%= StringPool.BLANK %>"
+		message="day"
+		onClick="setView('day');"
+		url="javascript:;"
+	/>
 
-<aui:container cssClass="calendar-dropdown-view-menu hide">
-	<liferay-ui:icon-menu direction="down" icon="<%= StringPool.BLANK %>" localizeMessage="<%= true %>" message='<%= _getCurrentView(request, sessionClicksDefaultView) %>'>
-		<liferay-ui:icon
-			iconCssClass="<%= StringPool.BLANK %>"
-			localizeMessage="<%= true %>"
-			message="Day"
-			onClick="setView('day');"
-			url="javascript:;"
-		/>
+	<liferay-ui:icon
+		iconCssClass="<%= StringPool.BLANK %>"
+		localizeMessage="<%= true %>"
+		message="week"
+		onClick="setView('week');"
+		url="javascript:;"
+	/>
 
-		<liferay-ui:icon
-			iconCssClass="<%= StringPool.BLANK %>"
-			localizeMessage="<%= true %>"
-			message="Week"
-			onClick="setView('week');"
-			url="javascript:;"
-		/>
+	<liferay-ui:icon
+		iconCssClass="<%= StringPool.BLANK %>"
+		localizeMessage="<%= true %>"
+		message="month"
+		onClick="setView('month');"
+		url="javascript:;"
+	/>
 
-		<liferay-ui:icon
-			iconCssClass="<%= StringPool.BLANK %>"
-			localizeMessage="<%= true %>"
-			message="Month"
-			onClick="setView('month');"
-			url="javascript:;"
-		/>
-
-		<liferay-ui:icon
-			iconCssClass="<%= StringPool.BLANK %>"
-			localizeMessage="<%= true %>"
-			message="Agenda"
-			onClick="setView('agenda');"
-			url="javascript:;"
-		/>
-	</liferay-ui:icon-menu>
-</aui:container>
+	<liferay-ui:icon
+		iconCssClass="<%= StringPool.BLANK %>"
+		localizeMessage="<%= true %>"
+		message="agenda"
+		onClick="setView('agenda');"
+		url="javascript:;"
+	/>
+</liferay-ui:icon-menu>
 
 <%!
 	private String _getCurrentView(HttpServletRequest request, String sessionClicksDefaultView) {
 		String test = ParamUtil.getString(request, "activeView", sessionClicksDefaultView);
-		System.out.println (test);
 		return  test;
 	}
 %>
@@ -123,51 +117,56 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 <aui:container cssClass="calendar-portlet-column-parent">
 	<aui:row>
 		<aui:col cssClass='<%= "calendar-portlet-column-options " + (columnOptionsVisible ? StringPool.BLANK : "hide") %>' id="columnOptions" span="<%= 3 %>">
-			<div class="calendar-portlet-mini-calendar" id="<portlet:namespace />miniCalendarContainer"></div>
 
-			<div id="<portlet:namespace />calendarListContainer">
-				<c:if test="<%= themeDisplay.isSignedIn() %>">
-					<div class="calendar-portlet-list-header toggler-header-expanded">
-						<span class="calendar-portlet-list-arrow"></span>
+			<div class="calendar-options-container">
+				<div class="calendar-mobile-header"><span class="header-content"><liferay-ui:message key="visible-calendars" /></span></div>
 
-						<span class="calendar-portlet-list-text"><liferay-ui:message key="my-calendars" /></span>
+				<div class="calendar-portlet-mini-calendar" id="<portlet:namespace />miniCalendarContainer"></div>
 
-						<c:if test="<%= userCalendarResource != null %>">
-							<span class="calendar-list-item-arrow" data-calendarResourceId="<%= userCalendarResource.getCalendarResourceId() %>" tabindex="0"><i class="icon-caret-down"></i></span>
-						</c:if>
-					</div>
+				<div class="calendar-list-display" id="<portlet:namespace />calendarListContainer">
+					<c:if test="<%= themeDisplay.isSignedIn() %>">
+						<div class="calendar-portlet-list-header toggler-header-expanded">
+							<span class="calendar-portlet-list-arrow"></span>
 
-					<div class="calendar-portlet-calendar-list" id="<portlet:namespace />myCalendarList"></div>
-				</c:if>
+							<span class="calendar-portlet-list-text"><liferay-ui:message key="my-calendars" /></span>
 
-				<c:if test="<%= groupCalendarResource != null %>">
-					<div class="calendar-portlet-list-header toggler-header-expanded">
-						<span class="calendar-portlet-list-arrow"></span>
+							<c:if test="<%= userCalendarResource != null %>">
+								<span class="calendar-list-item-arrow" data-calendarResourceId="<%= userCalendarResource.getCalendarResourceId() %>" tabindex="0"><i class="icon-caret-down"></i></span>
+							</c:if>
+						</div>
 
-						<span class="calendar-portlet-list-text"><liferay-ui:message key="current-site-calendars" /></span>
+						<div class="calendar-portlet-calendar-list" id="<portlet:namespace />myCalendarList"></div>
+					</c:if>
 
-						<c:if test="<%= CalendarResourcePermission.contains(permissionChecker, groupCalendarResource, ActionKeys.ADD_CALENDAR) %>">
-							<span class="calendar-list-item-arrow" data-calendarResourceId="<%= groupCalendarResource.getCalendarResourceId() %>" tabindex="0"><i class="icon-caret-down"></i></span>
-						</c:if>
-					</div>
+					<c:if test="<%= groupCalendarResource != null %>">
+						<div class="calendar-portlet-list-header toggler-header-expanded">
+							<span class="calendar-portlet-list-arrow"></span>
 
-					<div class="calendar-portlet-calendar-list" id="<portlet:namespace />siteCalendarList"></div>
-				</c:if>
+							<span class="calendar-portlet-list-text"><liferay-ui:message key="current-site-calendars" /></span>
 
-				<c:if test="<%= themeDisplay.isSignedIn() %>">
-					<div class="calendar-portlet-list-header toggler-header-expanded">
-						<span class="calendar-portlet-list-arrow"></span>
+							<c:if test="<%= CalendarResourcePermission.contains(permissionChecker, groupCalendarResource, ActionKeys.ADD_CALENDAR) %>">
+								<span class="calendar-list-item-arrow" data-calendarResourceId="<%= groupCalendarResource.getCalendarResourceId() %>" tabindex="0"><i class="icon-caret-down"></i></span>
+							</c:if>
+						</div>
 
-						<span class="calendar-portlet-list-text"><liferay-ui:message key="other-calendars" /></span>
-					</div>
+						<div class="calendar-portlet-calendar-list" id="<portlet:namespace />siteCalendarList"></div>
+					</c:if>
 
-					<div class="calendar-portlet-calendar-list" id="<portlet:namespace />otherCalendarList">
-						<input class="calendar-portlet-add-calendars-input" id="<portlet:namespace />addOtherCalendar" placeholder="<liferay-ui:message key="add-other-calendars" />" type="text" />
-					</div>
-				</c:if>
+					<c:if test="<%= themeDisplay.isSignedIn() %>">
+						<div class="calendar-portlet-list-header toggler-header-expanded">
+							<span class="calendar-portlet-list-arrow"></span>
+
+							<span class="calendar-portlet-list-text"><liferay-ui:message key="other-calendars" /></span>
+						</div>
+
+						<div class="calendar-portlet-calendar-list" id="<portlet:namespace />otherCalendarList">
+							<input class="calendar-portlet-add-calendars-input" id="<portlet:namespace />addOtherCalendar" placeholder="<liferay-ui:message key="add-other-calendars" />" type="text" />
+						</div>
+					</c:if>
+				</div>
+
+				<div id="<portlet:namespace />message"></div>
 			</div>
-
-			<div id="<portlet:namespace />message"></div>
 		</aui:col>
 
 		<aui:col cssClass="calendar-portlet-column-grid" id="columnGrid" span="<%= columnOptionsVisible ? 9 : 12 %>">
@@ -232,8 +231,18 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 <%@ include file="/view_calendar_menus.jspf" %>
 
 <aui:script>
+	var stringtest = function() {
+		return "color";
+	};
+
+
 	var setView = function(viewName) {
 		<portlet:namespace />scheduler.set('activeView',<portlet:namespace />scheduler.getViewByName(viewName));
+
+		document.getElementById("p_p_id<portlet:namespace/>").getElementsByClassName("calendar-dropdown-view-menu")[0].getElementsByClassName("lfr-icon-menu-text")[0].innerHTML = <portlet:namespace />scheduler.get('strings')[<portlet:namespace />scheduler.get('activeView').get('name')];
+		<!-- Liferay.Portlet.refresh('#p_p_id<portlet:namespace/>'); -->
+
+		console.log();
 	};
 
 	var getViewNodes = function() {
@@ -266,21 +275,26 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 		Liferay.CalendarUtil.syncCalendarsMap(calendarLists);
 	}
 
-	console.log("p_p_id" + <portlet:namespace />);
 	var win = A.getWin();
-	var togglerNode = A.one('.calendar-portlet-column-toggler');
-	var topBarNode = A.one('.calendar-top-bar');
+	var calendarPortlet = A.one('#p_p_id<portlet:namespace/>');
+	var togglerNode = calendarPortlet.one('.calendar-portlet-column-toggler');
+	var topBarNode = calendarPortlet.one('.lfr-nav.nav.nav-tabs');
 	var caretNode = null;
-	var groupMenuNode = A.one('.scheduler-base-views');
-	var calendarNavMenuNode = A.one('.calendar-navigation-bar');
-	var calendarDropMenuNode = calendarNavMenuNode.one('.calendar-dropdown-view-menu');
-	var todayNode = A.one('.scheduler-base-today');
-	var addEventNode = A.one('.calendar-add-event-btn');
-	var isExpanded = A.one('.calendar-portlet-list-header').hasClass('toggler-header-expanded');
-	var schedulerControlsNode = A.one('.scheduler-base-controls');
-	var schedulerDateNode = A.one('.scheduler-base-view-date');
+	var calendarDropMenuNode = calendarPortlet.one('.calendar-dropdown-view-menu');
+	var calendarOptionsNode = calendarPortlet.one('.calendar-portlet-column-options');
+	var todayNode = calendarPortlet.one('.scheduler-base-today');
+	var addEventNode = calendarPortlet.one('.calendar-add-event-btn');
+	var isExpanded = calendarPortlet.one('.calendar-portlet-list-header').hasClass('toggler-header-expanded');
+	var baseViewsNode = calendarPortlet.one('.scheduler-base-views');
+	var schedulerControlsNode = calendarPortlet.one('.scheduler-base-controls');
+	var dateControlsNode = schedulerControlsNode.one('.btn-group');
+	var leftRightBtnNodes = dateControlsNode.all('.btn');
+	var schedulerDateNode = calendarPortlet.one('.scheduler-base-view-date');
+	var viewNode = calendarPortlet.one('.scheduler-base-content .scheduler-view');
+	var dateControlsRowNode = calendarPortlet.one('.scheduler-base-hd');
 	var stateExpanded = isExpanded;
 	var stateMobile = false;
+	var widthOffset = 17;
 
 	console.log(<portlet:namespace />scheduler.get('activeView'));
 	console.log(<portlet:namespace />scheduler.getViewByName('month'));
@@ -289,21 +303,25 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 	console.log(<portlet:namespace />scheduler.get('viewsNode')._node.childNodes.length);
 
 	var <portlet:namespace />menuOrganizer = function() {
-		topBarNode.insert(schedulerControlsNode, 'after')
-		schedulerControlsNode.insert(addEventNode, calendarDropMenuNode);
-		schedulerControlsNode.insert(schedulerDateNode, schedulerControlsNode.one('scheduler-base-icon-next'));
-		addEventNode.insert(today, 'after');
-		today.insert(today, 'after');
+		<!-- schedulerControlsNode.set('className', 'scheduler-base-controls'); -->
+		topBarNode.insert(schedulerControlsNode, 'after');
+		dateControlsNode.insert(calendarDropMenuNode, 'before');
 
+		calendarPortlet.all('.calendar-portlet-list-header').replaceClass('toggler-header-expanded', 'toggler-header-collapsed');
+		calendarPortlet.all('.calendar-portlet-calendar-list').replaceClass(' toggler-content-expanded', ' toggler-content-collapsed');
 	}
 
 	var <portlet:namespace />collapseOnResize = function() {
-		if (win.width() < 992) {
+		var winWidth = win.width() + widthOffset;
+
+		if (winWidth < 992) {
 			caretNode = togglerNode.one('.icon-caret-right');
 			if (caretNode) caretNode.replaceClass('icon-caret-right', 'icon-caret-down');
 
 			caretNode = togglerNode.one('.icon-caret-left');
 			if (caretNode) caretNode.replaceClass('icon-caret-left', 'icon-caret-up');
+
+			calendarOptionsNode.insert(schedulerControlsNode, 'after');
 
 			togglerNode.addClass('btn');
 			togglerNode.addClass('btn-default');
@@ -319,44 +337,11 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 			caretNode = togglerNode.one('.icon-caret-up');
 			if (caretNode) caretNode.replaceClass('icon-caret-up', 'icon-caret-left');
 
+			topBarNode.insert(schedulerControlsNode, 'after');
+
 			togglerNode.removeClass('btn');
 			togglerNode.removeClass('btn-default');
-
-			A.one('.calendar-portlet-column-grid').insertBefore(togglerNode, A.one('.calendar-portlet-wrapper'))
-
-			stateMobile = false;
-		}
-
-		if (win.width() < 768) {
-			topBarNode.appendChild(A.one('.scheduler-base-today'));
-			topBarNode.appendChild(A.one('.calendar-add-event-btn'));
-
-			if (!groupMenuNode.hasClass('hide'))
-				groupMenuNode.addClass('hide');
-
-			if (isExpanded) {
-				stateExpanded = A.one('.calendar-portlet-list-header').hasClass('toggler-header-expanded');
-				A.all('.calendar-portlet-list-header').replaceClass('toggler-header-expanded', 'toggler-header-collapsed');
-				A.all('.calendar-portlet-calendar-list').replaceClass(' toggler-content-expanded', ' toggler-content-collapsed');
-
-				isExpanded = !isExpanded;
-			}
-		}
-		else {
-			schedulerControlsNode.insertBefore(A.one('.scheduler-base-today'), schedulerControlsNode.one('.btn-group'));
-			schedulerControlsNode.insertBefore(A.one('.calendar-add-event-btn'), schedulerControlsNode.one('.scheduler-base-today'));
-
-			if (groupMenuNode.hasClass('hide'))
-				groupMenuNode.removeClass('hide');
-
-			if (!isExpanded) {
-				if (stateExpanded) {
-					A.all('.calendar-portlet-list-header').replaceClass('toggler-header-collapsed', 'toggler-header-expanded');
-					A.all('.calendar-portlet-calendar-list').replaceClass(' toggler-content-collapsed', ' toggler-content-expanded');
-				}
-
-				isExpanded = !isExpanded;
-			}
+			calendarPortlet.one('.calendar-portlet-wrapper').insert(togglerNode, 'before');
 		}
 	};
 
@@ -364,9 +349,14 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 	A.all('.glyphicon-chevron-right').replaceClass('glyphicon-chevron-right', 'icon-chevron-right')
 
 	win.on(
+		'load', <portlet:namespace />menuOrganizer
+	);
+
+	win.on(
 		['resize', 'load'],
 		A.debounce(<portlet:namespace />collapseOnResize, 100)
 	);
+
 
 	window.<portlet:namespace />syncCalendarsMap = syncCalendarsMap;
 

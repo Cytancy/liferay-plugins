@@ -45,7 +45,7 @@ CalendarResourceDisplayTerms displayTerms = new CalendarResourceDisplayTerms(ren
 </liferay-ui:search-toggle>
 
 <c:if test="<%= CalendarPortletPermission.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_RESOURCE) %>">
-	<aui:button-row>
+	<aui:button-row cssClass="calendar-add-resource">
 		<liferay-portlet:renderURL var="editCalendarResourceURL">
 			<liferay-portlet:param name="mvcPath" value="/edit_calendar_resource.jsp" />
 			<liferay-portlet:param name="redirect" value="<%= currentURL %>" />
