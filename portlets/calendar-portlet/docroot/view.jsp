@@ -26,12 +26,23 @@ portletURL.setParameter("tabs1", tabs1);
 
 <div id="<portlet:namespace />alert"></div>
 
-<c:if test="<%= themeDisplay.isSignedIn() %>">
-	<liferay-ui:tabs
-		names="calendar,resources"
-		url="<%= portletURL.toString() %>"
-	/>
-</c:if>
+<div class="calendar-tab-bar">
+	<c:choose>
+		<c:when test="<%= themeDisplay.isSignedIn() %>">
+			<liferay-ui:tabs
+				names="calendar,resources"
+				url="<%= portletURL.toString() %>"
+			/>
+		</c:when>
+
+		<c:otherwise>
+			<liferay-ui:tabs
+				names="calendar"
+				url="<%= portletURL.toString() %>"
+			/>
+		</c:otherwise>
+	</c:choose>
+</div>
 
 <c:choose>
 	<c:when test='<%= tabs1.equals("calendar") %>'>
