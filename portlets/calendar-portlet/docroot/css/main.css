@@ -132,12 +132,6 @@
 		}
 	}
 
-	.scheduler-base {
-		.scheduler-view-month, .scheduler-view-week, .scheduler-view-day {
-			padding-top: 45px;
-		}
-	}
-
 	.calendar-portlet-column-grid {
 		position: relative;
 
@@ -156,21 +150,6 @@
 	.popover.scheduler-event-recorder-popover {
 		max-width: none;
 		padding-bottom: 10px;
-	}
-
-	.scheduler-view-agenda-info-container {
-		.scheduler-view-agenda-info {
-			background: #FFF;
-			line-height: 1.2;
-
-			.scheduler-view-agenda-info-biggie {
-				line-height: 30px;
-			}
-		}
-	}
-
-	.lfr-nav.nav-tabs {
-		margin-bottom: 12px;
 	}
 }
 
@@ -285,16 +264,6 @@
 
 .calendar-portlet-event-maybe, .calendar-portlet-event-pending {
 	@include opacity(0.8);
-}
-
-.calendar-portlet-event-recorder {
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 8px;
-	padding-bottom: 5px;
-
-	table td {
-		padding: 5px;
-	}
 }
 
 .calendar-portlet-field-date {
@@ -469,6 +438,10 @@
 	}
 }
 
+.calendar-top-bar .lfr-nav.nav-tabs {
+		margin-bottom: 12px;
+}
+
 .dialog-iframe-popup .calendar-portlet .fieldset {
 	margin-bottom: 2em;
 }
@@ -483,119 +456,6 @@
 	margin-left: 2em;
 	margin-top: -1em;
 }
-
-// ====================== temporary
-
-.scheduler-view-agenda-info-container .scheduler-view-agenda-info .scheduler-view-agenda-info-biggie {
-	@include respond-to(phone) {
-		width: 75px !important;
-	}
-}
-
-.scheduler-view-scrollable {
-	overflow: visible !important;
-	overflow-x: hidden !important;
-	position: relative !important;
-}
-
-.scheduler-view-month-content th {
-	text-align: right;
-}
-
-.scheduler-view-table-data-col-title {
-	padding: 3px 4px 0 0 !important;
-}
-.container-fluid.calendar-portlet-column-parent {
-	padding: 0 !important;
-}
-
-.scheduler-view-day-header-day {
-	.scheduler-view-day-header-day-number {
-		font-size: 14px !important;
-		float: right;
-		color: #ABAABA !important;
-
-		@media (max-width: 520px) {
-			font-size: 10px !important;
-		}
-	}
-
-	.scheduler-view-day-header-day-weekday {
-		font-size: 14px;
-		margin-right: 5px;
-		float: right;
-		color: #ABAABA !important;
-
-		@media (max-width: 550px) {
-			font-size: 10px;
-			margin-right: 2px;
-		}
-	}
-
-	.scheduler-today-hd {
-		border: none;
-
-		&:after {
-		    clear: both;
-		    content: "";
-		    display: block;
-		    border-bottom: 3px solid #009be6;
-		}
-	}
-}
-
-.scheduler-view-table-header-col .scheduler-view-table-header-day div {
-	padding-bottom: 3px !important;
-	font-size: 14px !important;
-
-	@media (max-width: 550px) {
-		font-size: 10px !important;
-	}
-}
-
-.scheduler-view-agenda-container .scheduler-view-agenda-events .scheduler-view-agenda-event-color {
-	top: 17px !important;
-}
-
-.scheduler-view-agenda-info-container {
-	border: none !important;
-	border-bottom: 1px solid #e4e4e4 !important;
-	@include border-radius(0);
-	margin: 0 !important;
-}
-
-.scheduler-view-agenda-container {
-	margin: 0 !important;
-	border: 0 !important;
-}
-
-.scheduler-view-agenda-container .scheduler-view-agenda-header {
-	border-width: 0 0 1px 0 !important;
-}
-
-.scheduler-view-agenda-info-container .scheduler-view-agenda-info .scheduler-view-agenda-info-biggie {
-	background: none !important;
-}
-
-.scheduler-view-agenda-container .scheduler-view-agenda-events .scheduler-view-agenda-event .scheduler-view-agenda-event-content {
-	padding-left: 20px !important;
-}
-
-.scheduler-view-agenda-event-color {
-	left: 12px !important;
-}
-
-
-.scheduler-view-agenda-container .scheduler-view-agenda-events .scheduler-view-agenda-no-events {
-	background: #F6F6F6;
-	border-bottom: 1px solid #E4E4E4;
-	border-style: solid;
-	padding: 10px;
-	text-align: center;
-	border-width: 0 0 1px 0;
-}
-
-// ===============================
 
 .scheduler-base-controls {
 	display: table;
@@ -705,17 +565,6 @@
 	@include opacity(0.4);
 }
 
-.scheduler-event-recorder-body {
-	select {
-		margin-bottom: 0;
-		width: 100%;
-	}
-
-	table {
-		width: 100%;
-	}
-}
-
 .scheduler-event-recorder-form {
 	.btn-toolbar {
 		&:before, &:after {
@@ -730,6 +579,16 @@
 
 	.popover-content {
 		padding-bottom: 0;
+
+		.calendar-portlet-event-recorder {
+			border-bottom: 1px solid #ddd;
+			margin-bottom: 6px;
+			padding-bottom: 8px;
+
+			table td {
+				padding: 8px;
+			}
+		}
 	}
 
 	.popover-footer  {
@@ -756,6 +615,17 @@
 			}
 		}
 	}
+
+	.scheduler-event-recorder-body {
+		select {
+			margin-bottom: 0;
+			width: 100%;
+		}
+
+		table {
+			width: 100%;
+		}
+	}
 }
 
 .scheduler-event-recorder-header {
@@ -777,10 +647,6 @@
 	border-top: 3px solid #009be6;
 	margin-top: 8px;
 }
-
-// .scheduler-view-day-header-day {
-// 	display: none;
-// }
 
 .scheduler-view-day .scheduler-view-table .scheduler-view-table-data-col {
 	padding-top: 5px;
@@ -947,6 +813,14 @@
 		color: #FFF !important;
 	}
 
+	.yui3-calendarnav-prevmonth {
+		margin-left: -5px;
+	}
+
+	.yui3-calendarnav-nextmonth {
+		margin-right: -5px;
+	}
+
 	.lfr-busy-day:after {
 		content: '\25CF';
 		display: block;
@@ -958,14 +832,6 @@
 		margin: 0;
 	}
 
-	.yui3-calendarnav-prevmonth {
-		margin-left: -5px;
-	}
-
-	.yui3-calendarnav-nextmonth {
-		margin-right: -5px;
-	}
-
 	.yui3-calendar-header {
 		border-top: 1px solid #DDD;
 		border-bottom: 1px solid #DDD;
@@ -973,11 +839,6 @@
 		font-size: 16px;
 		margin-bottom: 8px;
 	}
-}
-
-.scheduler-view-agenda-content .yui3-widget-hd {
-	background: #FFF;
-
 }
 
 /* ---------- Extras ---------- */

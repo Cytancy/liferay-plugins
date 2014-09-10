@@ -114,7 +114,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 	}
 %>
 
-<aui:container cssClass="calendar-portlet-column-parent">
+<div class="calendar-portlet-column-parent">
 	<aui:row>
 		<aui:col cssClass='<%= "calendar-portlet-column-options " + (columnOptionsVisible ? StringPool.BLANK : "hide") %>' id="columnOptions" span="<%= 3 %>">
 
@@ -125,7 +125,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 				<div class="calendar-list-display" id="<portlet:namespace />calendarListContainer">
 					<c:if test="<%= themeDisplay.isSignedIn() %>">
-						<div class="calendar-portlet-list-header toggler-header-expanded">
+						<div class="calendar-portlet-list-header toggler-header-collapsed">
 							<span class="calendar-portlet-list-arrow"></span>
 
 							<span class="calendar-portlet-list-text"><liferay-ui:message key="my-calendars" /></span>
@@ -135,11 +135,11 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 							</c:if>
 						</div>
 
-						<div class="calendar-portlet-calendar-list" id="<portlet:namespace />myCalendarList"></div>
+						<div class="calendar-portlet-calendar-list toggler-content-collapsed" id="<portlet:namespace />myCalendarList"></div>
 					</c:if>
 
 					<c:if test="<%= groupCalendarResource != null %>">
-						<div class="calendar-portlet-list-header toggler-header-expanded">
+						<div class="calendar-portlet-list-header toggler-header-collapsed">
 							<span class="calendar-portlet-list-arrow"></span>
 
 							<span class="calendar-portlet-list-text"><liferay-ui:message key="current-site-calendars" /></span>
@@ -149,17 +149,17 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 							</c:if>
 						</div>
 
-						<div class="calendar-portlet-calendar-list" id="<portlet:namespace />siteCalendarList"></div>
+						<div class="calendar-portlet-calendar-list toggler-content-collapsed" id="<portlet:namespace />siteCalendarList"></div>
 					</c:if>
 
 					<c:if test="<%= themeDisplay.isSignedIn() %>">
-						<div class="calendar-portlet-list-header toggler-header-expanded">
+						<div class="calendar-portlet-list-header toggler-header-collapsed">
 							<span class="calendar-portlet-list-arrow"></span>
 
 							<span class="calendar-portlet-list-text"><liferay-ui:message key="other-calendars" /></span>
 						</div>
 
-						<div class="calendar-portlet-calendar-list" id="<portlet:namespace />otherCalendarList">
+						<div class="calendar-portlet-calendar-list toggler-content-collapsed" id="<portlet:namespace />otherCalendarList">
 							<input class="calendar-portlet-add-calendars-input" id="<portlet:namespace />addOtherCalendar" placeholder="<liferay-ui:message key="add-other-calendars" />" type="text" />
 						</div>
 					</c:if>
@@ -226,23 +226,15 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 			</liferay-util:include>
 		</aui:col>
 	</aui:row>
-</aui:container>
+</div>
 
 <%@ include file="/view_calendar_menus.jspf" %>
 
 <aui:script>
-	var stringtest = function() {
-		return "color";
-	};
-
-
 	var setView = function(viewName) {
 		<portlet:namespace />scheduler.set('activeView',<portlet:namespace />scheduler.getViewByName(viewName));
 
 		document.getElementById("p_p_id<portlet:namespace/>").getElementsByClassName("calendar-dropdown-view-menu")[0].getElementsByClassName("lfr-icon-menu-text")[0].innerHTML = <portlet:namespace />scheduler.get('strings')[<portlet:namespace />scheduler.get('activeView').get('name')];
-		<!-- Liferay.Portlet.refresh('#p_p_id<portlet:namespace/>'); -->
-
-		console.log();
 	};
 
 	var getViewNodes = function() {
@@ -278,37 +270,18 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 	var win = A.getWin();
 	var calendarPortlet = A.one('#p_p_id<portlet:namespace/>');
 	var togglerNode = calendarPortlet.one('.calendar-portlet-column-toggler');
-	var topBarNode = calendarPortlet.one('.lfr-nav.nav.nav-tabs');
+	var topBarNode = calendarPortlet.one('.calendar-tab-bar');
+	var tabsNode = topBarNode.one('.nav-tabs');
 	var caretNode = null;
-	var calendarDropMenuNode = calendarPortlet.one('.calendar-dropdown-view-menu');
 	var calendarOptionsNode = calendarPortlet.one('.calendar-portlet-column-options');
-	var todayNode = calendarPortlet.one('.scheduler-base-today');
-	var addEventNode = calendarPortlet.one('.calendar-add-event-btn');
-	var isExpanded = calendarPortlet.one('.calendar-portlet-list-header').hasClass('toggler-header-expanded');
-	var baseViewsNode = calendarPortlet.one('.scheduler-base-views');
 	var schedulerControlsNode = calendarPortlet.one('.scheduler-base-controls');
 	var dateControlsNode = schedulerControlsNode.one('.btn-group');
-	var leftRightBtnNodes = dateControlsNode.all('.btn');
-	var schedulerDateNode = calendarPortlet.one('.scheduler-base-view-date');
-	var viewNode = calendarPortlet.one('.scheduler-base-content .scheduler-view');
-	var dateControlsRowNode = calendarPortlet.one('.scheduler-base-hd');
-	var stateExpanded = isExpanded;
 	var stateMobile = false;
 	var widthOffset = 17;
 
-	console.log(<portlet:namespace />scheduler.get('activeView'));
-	console.log(<portlet:namespace />scheduler.getViewByName('month'));
-	console.log(<portlet:namespace />scheduler.get('views'));
-	console.log((<portlet:namespace />scheduler.get('viewsNode')._node.childNodes[0] instanceof Node));
-	console.log(<portlet:namespace />scheduler.get('viewsNode')._node.childNodes.length);
-
 	var <portlet:namespace />menuOrganizer = function() {
-		<!-- schedulerControlsNode.set('className', 'scheduler-base-controls'); -->
 		topBarNode.insert(schedulerControlsNode, 'after');
-		dateControlsNode.insert(calendarDropMenuNode, 'before');
-
-		calendarPortlet.all('.calendar-portlet-list-header').replaceClass('toggler-header-expanded', 'toggler-header-collapsed');
-		calendarPortlet.all('.calendar-portlet-calendar-list').replaceClass(' toggler-content-expanded', ' toggler-content-collapsed');
+		dateControlsNode.insert(calendarPortlet.one('.calendar-dropdown-view-menu'), 'before');
 	}
 
 	var <portlet:namespace />collapseOnResize = function() {
@@ -326,7 +299,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 			togglerNode.addClass('btn');
 			togglerNode.addClass('btn-default');
 
-			topBarNode.appendChild(togglerNode);
+			tabsNode.appendChild(togglerNode);
 
 			stateMobile = true;
 		}
@@ -337,7 +310,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 			caretNode = togglerNode.one('.icon-caret-up');
 			if (caretNode) caretNode.replaceClass('icon-caret-up', 'icon-caret-left');
 
-			topBarNode.insert(schedulerControlsNode, 'after');
+			tabsNode.insert(schedulerControlsNode, 'after');
 
 			togglerNode.removeClass('btn');
 			togglerNode.removeClass('btn-default');
@@ -345,8 +318,8 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 		}
 	};
 
-	A.all('.glyphicon-chevron-left').replaceClass('glyphicon-chevron-left', 'icon-chevron-left')
-	A.all('.glyphicon-chevron-right').replaceClass('glyphicon-chevron-right', 'icon-chevron-right')
+	calendarPortlet.all('.glyphicon-chevron-left').replaceClass('glyphicon-chevron-left', 'icon-chevron-left')
+	calendarPortlet.all('.glyphicon-chevron-right').replaceClass('glyphicon-chevron-right', 'icon-chevron-right')
 
 	win.on(
 		'load', <portlet:namespace />menuOrganizer
@@ -471,6 +444,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 			animated: true,
 			container: '#<portlet:namespace />calendarListContainer',
 			content: '.calendar-portlet-calendar-list',
+			expanded: false,
 			header: '.calendar-portlet-list-header'
 		}
 	);
