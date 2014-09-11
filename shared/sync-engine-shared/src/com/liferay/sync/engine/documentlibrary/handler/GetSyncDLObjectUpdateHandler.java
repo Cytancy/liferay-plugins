@@ -188,7 +188,6 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 		}
 
 		Path sourceFilePath = Paths.get(sourceSyncFile.getFilePathName());
-
 		Path targetFilePath = Paths.get(targetFilePathName);
 
 		sourceSyncFile = SyncFileService.updateSyncFile(
@@ -199,8 +198,6 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 		}
 		else if (targetSyncFile.isFolder()) {
 			Files.createDirectories(targetFilePath);
-
-			SyncFileService.update(sourceSyncFile);
 
 			SyncFileService.updateFileKeySyncFile(sourceSyncFile);
 		}
@@ -339,7 +336,9 @@ public class GetSyncDLObjectUpdateHandler extends BaseSyncDLObjectHandler {
 				downloadFile(sourceSyncFile, null, false);
 			}
 		}
-		else if (FileUtil.hasFileChanged(targetSyncFile, sourceFilePath)) {
+		else if (targetSyncFile.isFile() &&
+				 FileUtil.hasFileChanged(targetSyncFile, sourceFilePath)) {
+
 			downloadFile(
 				sourceSyncFile, sourceVersion,
 				!IODeltaUtil.isIgnoredFilePatchingExtension(targetSyncFile));

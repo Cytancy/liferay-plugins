@@ -1,6 +1,24 @@
 @import "compass";
 @import "mixins";
 
+// This styling sets the 'Add Resource' button in the 'Resources' tab.
+// It makes its style match that of the other add buttons.
+.calendar-add-resource {
+	margin: 10px 0;
+
+	.btn {
+		background-color: #54aaff;
+		border-color: #3b9dff;
+		color: white;
+
+		&:hover {
+			color: white;
+			background-color: #2b96ff;
+			border-color: #007ffc;
+		}
+	}
+}
+
 .calendar-booking-invitations {
 	min-height: 110px;
 
@@ -26,7 +44,8 @@
 
 .calendar-list-empty-message {
 	color: #666;
-	margin-top: 4px;
+	// Removal of unnecessary margin that wasted space in one of the
+	// dropdown menus in the 'Viewable Calendars' pane.
 }
 
 .calendar-list-item {
@@ -120,28 +139,150 @@
 	.calendar-portlet-column-grid {
 		position: relative;
 
-		.calendar-portlet-column-toggler {
-			bottom: 0;
-			margin-left: -10px;
+		// Toggler styling moved from here since the toggler no longer
+		// lives in 'calendar-portlet-column-grid' or the calendar portlet.
+		.scheduler-event {
+			z-index: 300;
+		}
+	}
+
+	// Styling for the toggler was moved here
+	.calendar-portlet-column-toggler {
+		// Default positioning for the toggler
+		bottom: 0;
+		margin-left: -10px;
+		position: absolute;
+		top: 0;
+		width: 10px;
+
+		&:hover {
+			background: #E9E9E9;
+			cursor: pointer;
+		}
+
+		// Size and positioning properties for the toggler button
+		// in mobile view.
+		@include respond-to(phone, tablet) {
+			float: right;
+			height: 32px;
+			margin: 0 0 0 5px;
+			padding: 0;
+			position: relative;
+			width: 15%;
+		}
+
+		// Icon positioning properties that were extended to also
+		// include up and down arrows.
+		// Will need to be changed when chevron icons are fixed.
+		.icon-caret-right, .icon-caret-left, .icon-caret-down, .icon-caret-up {
+			left: 50%;
+			margin: -14px 0 0 -1px;
 			position: absolute;
-			top: 0;
-			width: 10px;
+			top: 50%;
 
-			&:hover {
-				background: #E9E9E9;
-				cursor: pointer;
+			@include respond-to(phone, tablet) {
+				left: auto;
+				margin: auto;
+				position: relative;
+				top: 4px;
 			}
+		}
+	}
 
-			.icon-caret-right, .icon-caret-left {
-				left: 50%;
-				margin: -14px 0 0 -1px;
-				position: absolute;
-				top: 50%;
+	.popover.scheduler-event-recorder-popover {
+		max-width: none;
+		padding-bottom: 10px;
+	}
+
+	// Styling for the calendar "controls bar" which contains
+	// the navigation buttons.
+	.scheduler-base-controls {
+		// Padding adjustments since the controls bar is moved
+		// via JS for layout purposes.
+		@include respond-to(phone, tablet) {
+			padding: 0 15px;
+		}
+
+		// Margin adjustments in phone view in order to maximize
+		// amount of visibility space available to the buttons.
+		@include respond-to(phone) {
+			margin-bottom: 2%;
+		}
+
+		// Unifies button formatting. Needed since the portlet adds
+		// an additional button ('Add Event') and could potentially
+		// add more.
+		.btn {
+			float: left;
+			margin: 0 8px 0 auto;
+			padding: 7px 15px;
+
+			@include respond-to(phone) {
+				margin: 0 auto;
+				padding: 6px 0px;
 			}
 		}
 
-		.scheduler-event {
-			z-index: 300;
+		.btn-group {
+			// Overwrites above margins for button-groups since
+			// button group buttons stick together.
+			.btn {
+				margin-right: 0;
+			}
+
+			// Button styling for mobile view. Forces larger buttons
+			// with set width. This is ok because the buttons
+			// contain icon content which cannot vary in width
+			// when language changes.
+			.scheduler-base-icon-prev, .scheduler-base-icon-next {
+				@include respond-to(phone) {
+					width: 50px;
+				}
+			}
+		}
+
+		// Mobile styling for 'Add Event' button.
+		.calendar-add-event-btn {
+			@include respond-to(phone) {
+				margin-right: 2%;
+				width: 49%;
+			}
+		}
+
+		.calendar-dropdown-view-menu {
+			// Prevents the dropdown menu from being displayed
+			// until it is needed in the mobile view.
+			display: none;
+
+			@include respond-to(phone) {
+				display: inline-block;
+				margin-bottom: 2%;
+				width: 49%;
+			}
+		}
+
+		// Button styling for the 'Today' button in mobile view.
+		// 100px is subtracted since the width of the icon side
+		// buttons are 50px.
+		.scheduler-base-today {
+			@include respond-to(phone) {
+				width: calc(100% - 100px);
+			}
+		}
+
+		.scheduler-base-views {
+			// Moves the views btn group to the right. This
+			// is the button group that contains 'Days, Week,
+			// Months, and Agenda'
+			float: right;
+			padding: 0;
+			width: auto;
+
+			// This btn-group is hidden in mobile view since
+			// it's replaced by the dropdown version.
+			@include respond-to(phone) {
+				display: none;
+			}
 		}
 	}
 
@@ -152,19 +293,7 @@
 		padding: 2px 4px;
 	}
 
-	.popover.scheduler-event-recorder-popover {
-		max-width: none;
-	}
-
-	.scheduler-view-agenda-info-container {
-		.scheduler-view-agenda-info {
-			line-height: 1.2;
-
-			.scheduler-view-agenda-info-biggie {
-				line-height: 30px;
-			}
-		}
-	}
+	//Unnecessary agenda styling removed. Was causing uneven and unnecessary spacing.
 }
 
 .calendar-event-answer {
@@ -174,6 +303,52 @@
 		color: #555;
 		cursor: default;
 		text-decoration: none;
+	}
+}
+
+// Bottom separator line that is under the 'Visible Calendars' pane in mobile views.
+.calendar-list-display {
+	@include respond-to(phone, tablet) {
+		border-bottom: 1px solid #DDD;
+		margin-bottom: 10px;
+		padding-bottom: 5px;
+	}
+}
+
+// Header for the 'Visible Calendars' pane that is only visible in mobile views.
+// Implements CSS tricks to create a text bisected line-break.
+.calendar-mobile-header {
+	display: none;
+	overflow: hidden;
+	padding-left: 3px;
+
+	@include respond-to(phone, tablet) {
+		display: block;
+	}
+
+	.header-content {
+		font-size: 24px;
+		color: #777;
+		margin-bottom: 5px;
+		position: relative;
+
+		&:before, &:after{
+			content: "";
+			position: absolute;
+			top: 50%;
+			border-bottom: 1px solid #DDD;
+			width: 400%;
+		}
+
+		&:before {
+			margin-right: .5em;
+			right: 100%;
+		}
+
+		&:after {
+			left: 100%;
+			margin-left: .5em;
+		}
 	}
 }
 
@@ -188,9 +363,11 @@
 .calendar-portlet-calendar-list {
 	margin-left: 11px;
 
+	// Evens out spacing for the text input box available under 'Other Calendars'
+	// of the 'Visible Calendars' pane.
 	.calendar-portlet-add-calendars-input {
-		margin: 2px 0 5px;
-		padding: 5px 4px;
+		margin: 5px 0;
+		padding: 5px 10px;
 		width: 200px;
 	}
 }
@@ -206,6 +383,34 @@
 	width: 80%;
 }
 
+// Styling adjustments to toggled side-pane in desktop view.
+.calendar-portlet-column-parent  .calendar-portlet-column-options {
+	// Removes empty right-hand space to give more visibility to the pane.
+	padding-right: 0;
+
+	// Returns empty right-hand space in mobile view to maintain layout.
+	@include respond-to(phone, tablet) {
+		padding-right: 15px;
+	}
+
+	.calendar-options-container {
+		// Sets the height of the pane to match the calendar,
+		// ensuring that there will be no layout or overflow issues.
+		height: 500px;
+		// Adds a bottom separator-line for appearance.
+		border-bottom: 1px solid #DDD;
+		// Allows a scrollbar to appear when there are more calendars
+		// than there is space to display them.
+		overflow-x: hidden;
+
+		// To accomodate mobile layouts.
+		@include respond-to(phone, tablet) {
+			height: auto;
+			border: 0;
+		}
+	}
+}
+
 .calendar-portlet-confirmation-text {
 	padding: 5px;
 }
@@ -218,11 +423,8 @@
 	@include opacity(0.8);
 }
 
-.calendar-portlet-event-recorder {
-	table td {
-		padding: 5px;
-	}
-}
+// Padding here moved and adjusted for better spacing in the event pop-over
+// menus that appear when trying to add events.
 
 .calendar-portlet-field-date {
 	white-space: nowrap;
@@ -262,7 +464,7 @@
 	display: block;
 	font-weight: normal;
 	line-height: 35px;
-	margin: 10px 0 0 0;
+	// Margin removed due to excess spacing between calendars in 'Visible Calendars'
 	padding: 2px 0;
 	position: relative;
 	text-decoration: none;
@@ -281,8 +483,21 @@
 	}
 }
 
-.calendar-portlet-list-text {
+// Styling to maintain 'Visible Calendars' layout in overflow conditions
+.calendar-portlet-list-text, .calendar-list-item-label {
+	display: inline-block;
+	//Max width that text can be before overflowing to dropdown arrow
+	max-width: calc(100% - 40px);
+	// Hides overflow and replaces with ellipsis
+	overflow: hidden;
+	text-overflow: ellipsis;
 	vertical-align: middle;
+	white-space: nowrap;
+
+	@include respond-to(phone, tablet) {
+		// Max width for overflow changes in mobile views
+		max-width: calc(100% - 60px);
+	}
 }
 
 .calendar-portlet-recurrence-container {
@@ -341,6 +556,10 @@
 	}
 }
 
+.calendar-tab-bar .lfr-nav.nav-tabs {
+		margin-bottom: 12px;
+}
+
 .dialog-iframe-popup .calendar-portlet .fieldset {
 	margin-bottom: 2em;
 }
@@ -356,34 +575,98 @@
 	margin-top: -1em;
 }
 
-.scheduler-base-controls .calendar-add-event-btn {
-	margin-right: 3px;
-}
-
 .scheduler-event-past {
 	@include opacity(0.4);
 }
 
 .scheduler-event-recorder-body select {
+	margin-bottom: 0;
 	max-width: 340px;
 	width: 100%;
 }
 
+.scheduler-event-recorder-form {
+	// Removes redundant spacing in the top bar of the add-event
+	// pop-over menu.
+	.btn-toolbar {
+		&:before, &:after {
+			display: inline;
+		}
+	}
+
+	// Fixes the alignment of the close-button in this pop-over.
+	.close {
+		line-height: .8;
+		margin: 0;
+	}
+
+	.popover-content {
+		// Fixes bottom spacing.
+		padding-bottom: 0;
+
+		// Spacing fix and adds a separator line.
+		.calendar-portlet-event-recorder {
+			border-bottom: 1px solid #ddd;
+			margin-bottom: 6px;
+			padding-bottom: 8px;
+
+			// Spacing fix for each element in the info
+			// table.
+			table td {
+				padding: 8px;
+			}
+		}
+	}
+
+	// Centers buttons in the event view.
+	.popover-footer  {
+		.btn-toolbar {
+			margin: 0;
+			text-align: center;
+
+			.btn-group {
+				display: inline-block;
+				float: center;
+				margin: 0;
+				width: auto;
+
+				.btn {
+					margin-top: 0;
+					width: auto;
+				}
+			}
+		}
+
+		// Styes the 'Save' event button to match
+		// the styling of other add buttons in the portlet.
+		// (e.g. light blue background, white text)
+		#saveBtn {
+			color: white;
+			background-color: #54aaff;
+			border-color: #3b9dff;
+			margin-right: 1px;
+
+			&:hover {
+				color: white;
+				background-color: #2b96ff;
+				border-color: #007ffc;
+			}
+		}
+	}
+}
+
+// This section was moved from the above and reorganized.
 .scheduler-event-recorder-header .scheduler-event-recorder-content {
 	background: #FAFAFA;
 	border: 1px solid #C4C4C4;
 	outline-width: 0;
 	padding: 7px;
-	width: 90%;
-}
+	width: calc(100% - 30px);
 
-.scheduler-event-recorder-header .scheduler-event-recorder-content:hover {
-	background: #FFC;
-	border-color: #FC0;
-}
-
-.scheduler-event-recorder-popover .popover-title .close {
-	margin-top: 5px;
+	&:hover {
+		background: #FFC;
+		border-color: #FC0;
+	}
 }
 
 .scheduler-view-day .scheduler-view-table .scheduler-view-table-data-col {
@@ -479,9 +762,22 @@
 	background-position: -66px -18px;
 }
 
-.yui3-skin-sam .calendar-portlet-mini-calendar .yui3-calendar-content {
-	background: #FFF !important;
-	border: 1px solid #DDD;
+.yui3-skin-sam .calendar-portlet-mini-calendar {
+	// Adds a line separator and spacing to the bottom
+	// of the mini-calendar
+	border-bottom: 1px solid #DDD;
+	margin-bottom: 8px;
+
+	// Hides the mini calendar from the 'Visible Calendars'
+	// pane in mobile views.
+	@include respond-to(phone, tablet) {
+		display: none;
+	}
+
+	.yui3-calendar-content {
+		background: #FFF !important;
+		border: 1px solid #DDD;
+	}
 }
 
 /* ---------- YUI calendar ---------- */
@@ -495,13 +791,31 @@
 		border-width: 0;
 	}
 
+	// Removes excess padding to widen the view of the 'Visible Calendars'
+	// pane in desktop view.
+	.yui3-calendar-content {
+		padding: 0;
+	}
+
 	.yui3-calendar-weekday {
 		color: #4599E2;
+		// Changes weekday header alignment to match
+		// the weekday numbers.
+		text-align: center;
 	}
 
 	.yui3-calendar-day {
-		padding: 5px 0 10px;
+		// Padding adjustments in the day-cells for better visibility.
+		padding: 7px 0;
 		width: 14.286%;
+
+		&:focus {
+			outline: 0;
+		}
+	}
+
+	.yui3-calendar-nextmonth-day:focus {
+		outline: 0;
 	}
 
 	.yui3-calendar-day:hover, .yui3-calendar-day.yui3-calendar-day-selected:hover, .yui3-calendar-day.yui3-calendar-day-selected.lfr-busy-day:hover {
@@ -523,6 +837,15 @@
 		color: #FFF !important;
 	}
 
+	// Spacing adjustments for the left-right arrows in the mini-calendar.
+	.yui3-calendarnav-prevmonth {
+		margin-left: -5px;
+	}
+
+	.yui3-calendarnav-nextmonth {
+		margin-right: -5px;
+	}
+
 	.lfr-busy-day:after {
 		content: '\25CF';
 		display: block;
@@ -532,6 +855,16 @@
 
 	.yui3-aclist-list {
 		margin: 0;
+	}
+
+	// Changes the header style for the mini-calendar.
+	// Also adds line separators above and below the header.
+	.yui3-calendar-header {
+		border-top: 1px solid #DDD;
+		border-bottom: 1px solid #DDD;
+		padding: 8px 0;
+		font-size: 16px;
+		margin-bottom: 8px;
 	}
 }
 

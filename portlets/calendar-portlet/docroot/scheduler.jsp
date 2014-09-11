@@ -43,7 +43,8 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideDayView %>">
 		window.<portlet:namespace />dayView = new A.SchedulerDayView(
 			{
-				height: 700,
+				<!-- Height lowered due to taking excess space. -->
+				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>,
 				strings: {
@@ -56,7 +57,8 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideWeekView %>">
 		window.<portlet:namespace />weekView = new A.SchedulerWeekView(
 			{
-				height: 700,
+				<!-- Height lowered due to taking excess space. -->
+				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>,
 				strings: {
@@ -69,7 +71,8 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideMonthView %>">
 		window.<portlet:namespace />monthView = new A.SchedulerMonthView(
 			{
-				height: 700,
+				<!-- Height lowered due to taking excess space. -->
+				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>
 			}
@@ -79,7 +82,8 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideAgendaView %>">
 		window.<portlet:namespace />agendaView = new A.SchedulerAgendaView(
 			{
-				height: 700,
+				<!-- Height lowered due to taking excess space. -->
+				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>,
 				strings: {
@@ -90,7 +94,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	</c:if>
 
 	<c:if test="<%= !readOnly && (userDefaultCalendar != null) %>">
-		var width = Math.min(Liferay.Util.getWindowWidth(), 550);
+		<!-- Hard width removed to allow for responsive width. -->
 
 		window.<portlet:namespace />eventRecorder = new Liferay.SchedulerEventRecorder(
 			{
@@ -101,9 +105,6 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 				editCalendarBookingURL: '<%= HtmlUtil.escapeJS(editCalendarBookingURL) %>',
 				headerTemplate: new A.Template(A.one('#<portlet:namespace />eventRecorderHeaderTpl').html()),
 				permissionsCalendarBookingURL: '<%= HtmlUtil.escapeJS(permissionsCalendarBookingURL) %>',
-				popover: {
-					width: width
-				},
 				portletNamespace: '<portlet:namespace />',
 				viewCalendarBookingURL: '<%= HtmlUtil.escapeJS(viewCalendarBookingURL) %>'
 			}
