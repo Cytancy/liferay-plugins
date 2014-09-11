@@ -207,7 +207,8 @@ AssetEntry layoutAssetEntry = AssetEntryLocalServiceUtil.getEntry(CalendarBookin
 
 <c:if test="<%= calendarBooking.isRecurring() %>">
 	<aui:script use="liferay-calendar-recurrence-util">
-		var summaryNode = A.one("#<portlet:namespace />recurrenceSummary");
+		<!-- Fixes booking bug caused by use of double quotes. -->
+		var summaryNode = A.one('#<portlet:namespace />recurrenceSummary');
 
 		var endValue = 'never';
 		var untilDate = null;
@@ -231,6 +232,13 @@ AssetEntry layoutAssetEntry = AssetEntryLocalServiceUtil.getEntry(CalendarBookin
 
 		<%
 		JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
+
+		List<Weekday> weekdays = new ArrayList<Weekday>();
+
+		// Fixed incorrect function bug that caused recurring events to be incorrect.
+		for (PositionalWeekday positionalWeekday : recurrence.getPositionalWeekdays()) {
+			weekdays.add(positionalWeekday.getWeekday());
+		}
 		%>
 
 		var recurrence = {
@@ -239,7 +247,7 @@ AssetEntry layoutAssetEntry = AssetEntryLocalServiceUtil.getEntry(CalendarBookin
 			frequency: '<%= String.valueOf(recurrence.getFrequency()) %>',
 			interval: <%= recurrence.getInterval() %>,
 			untilDate: untilDate,
-			weekdays: <%= jsonSerializer.serialize(recurrence.getWeekdays()) %>
+			weekdays: <%= jsonSerializer.serialize(weekdays) %>
 		}
 
 		var recurrenceSummary = Liferay.RecurrenceUtil.getSummary(recurrence);
