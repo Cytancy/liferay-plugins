@@ -26,7 +26,11 @@ portletURL.setParameter("tabs1", tabs1);
 
 <div id="<portlet:namespace />alert"></div>
 
+<!-- Additional class added for styling and organization purposes. -->
 <div class="calendar-tab-bar">
+	<!-- Conditional modified such that the tab bar will always be displayed. -->
+	<!-- This is for the sake of maintaining space for the dropdown toggler button -->
+	<!-- when the user is logged out. -->
 	<c:choose>
 		<c:when test="<%= themeDisplay.isSignedIn() %>">
 			<liferay-ui:tabs

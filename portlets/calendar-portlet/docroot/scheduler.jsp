@@ -43,6 +43,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideDayView %>">
 		window.<portlet:namespace />dayView = new A.SchedulerDayView(
 			{
+				<!-- Height lowered due to taking excess space. -->
 				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>,
@@ -56,6 +57,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideWeekView %>">
 		window.<portlet:namespace />weekView = new A.SchedulerWeekView(
 			{
+				<!-- Height lowered due to taking excess space. -->
 				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>,
@@ -69,6 +71,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideMonthView %>">
 		window.<portlet:namespace />monthView = new A.SchedulerMonthView(
 			{
+				<!-- Height lowered due to taking excess space. -->
 				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>
@@ -79,6 +82,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	<c:if test="<%= !hideAgendaView %>">
 		window.<portlet:namespace />agendaView = new A.SchedulerAgendaView(
 			{
+				<!-- Height lowered due to taking excess space. -->
 				height: 500,
 				isoTime: <%= isoTimeFormat %>,
 				readOnly: <%= readOnly %>,
@@ -90,7 +94,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 	</c:if>
 
 	<c:if test="<%= !readOnly && (userDefaultCalendar != null) %>">
-		var width = Math.min(Liferay.Util.getWindowWidth(), 550);
+		<!-- Hard width removed to allow for responsive width. -->
 
 		window.<portlet:namespace />eventRecorder = new Liferay.SchedulerEventRecorder(
 			{

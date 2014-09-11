@@ -74,7 +74,15 @@ JSONArray otherCalendarsJSONArray = CalendarUtil.toCalendarsJSONArray(themeDispl
 boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, "calendar-portlet-column-options-visible", "true"));
 %>
 
+<!-- Dropdown view menu implementation. -->
+
+<!-- Uses a taglib where the message is set to the current view. -->
 <liferay-ui:icon-menu cssClass="calendar-dropdown-view-menu" direction="down" icon="<%= StringPool.BLANK %>" localizeMessage="<%= true %>" message='<%= _getCurrentView(request, sessionClicksDefaultView) %>'>
+
+	<!-- Hard codes the four views due to limitations preventing the acquisition -->
+	<!-- of the views server side. -->
+
+	<!-- Each icon options makes a javascript call sending the requested view. -->
 	<liferay-ui:icon
 		iconCssClass="<%= StringPool.BLANK %>"
 		message="day"
@@ -114,17 +122,28 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 	}
 %>
 
+<!-- Changed from an AUI container taglib to a basic div. -->
+<!-- The styling from the taglib was unnecessary. -->
 <div class="calendar-portlet-column-parent">
 	<aui:row>
 		<aui:col cssClass='<%= "calendar-portlet-column-options " + (columnOptionsVisible ? StringPool.BLANK : "hide") %>' id="columnOptions" span="<%= 3 %>">
 
+			<!-- Other components moved down and reorganized below a new header that -->
+			<!-- contains the text 'Visible Calendars' to be displayed -->
+			<!-- in mobile views. -->
+
+			<!-- Reorganization is for layout purposes. -->
+
 			<div class="calendar-options-container">
 				<div class="calendar-mobile-header"><span class="header-content"><liferay-ui:message key="visible-calendars" /></span></div>
+
 
 				<div class="calendar-portlet-mini-calendar" id="<portlet:namespace />miniCalendarContainer"></div>
 
 				<div class="calendar-list-display" id="<portlet:namespace />calendarListContainer">
 					<c:if test="<%= themeDisplay.isSignedIn() %>">
+						<!-- Class set to collapsed so that 'Visible Calendar' dropdowns -->
+						<!-- default as collapsed. -->
 						<div class="calendar-portlet-list-header toggler-header-collapsed">
 							<span class="calendar-portlet-list-arrow"></span>
 
@@ -135,6 +154,8 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 							</c:if>
 						</div>
 
+						<!-- Content classes have a collapsed tag added for the same -->
+						<!-- reason as listed above. -->
 						<div class="calendar-portlet-calendar-list toggler-content-collapsed" id="<portlet:namespace />myCalendarList"></div>
 					</c:if>
 
@@ -162,7 +183,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 						<div class="calendar-portlet-calendar-list toggler-content-collapsed" id="<portlet:namespace />otherCalendarList">
 							<input class="calendar-portlet-add-calendars-input" id="<portlet:namespace />addOtherCalendar" placeholder="<liferay-ui:message key="add-other-calendars" />" type="text" />
 						</div>
-					</c:if>
+						</c:if>
 				</div>
 
 				<div id="<portlet:namespace />message"></div>
@@ -230,9 +251,15 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 <%@ include file="/view_calendar_menus.jspf" %>
 
+<!-- Script functions that are placed in this scope that they can be called  -->
+<!-- by the dropdown view buttons. -->
+
 <aui:script>
 	var setView = function(viewName) {
+		<!-- Sets the view using the scheduler 'set' function. -->
 		<portlet:namespace />scheduler.set('activeView',<portlet:namespace />scheduler.getViewByName(viewName));
+
+		<!-- Sets the text displayed by the dropdown menu to be the current active veiw.  -->
 
 		document.getElementById("p_p_id<portlet:namespace/>").getElementsByClassName("calendar-dropdown-view-menu")[0].getElementsByClassName("lfr-icon-menu-text")[0].innerHTML = <portlet:namespace />scheduler.get('strings')[<portlet:namespace />scheduler.get('activeView').get('name')];
 	};
@@ -267,67 +294,114 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 		Liferay.CalendarUtil.syncCalendarsMap(calendarLists);
 	}
 
+	<!-- Javascript functions and variables used for functionality and  -->
+	<!-- layout purposes. -->
+
+	<!-- The site window node. -->
 	var win = A.getWin();
+	<!-- The calendar portlet node. -->
 	var calendarPortlet = A.one('#p_p_id<portlet:namespace/>');
+	<!-- The node representing the toggler button. -->
 	var togglerNode = calendarPortlet.one('.calendar-portlet-column-toggler');
+	<!-- The node representing the container that holds tabs at the top of  -->
+	<!-- the portlet. -->
 	var topBarNode = calendarPortlet.one('.calendar-tab-bar');
+	<!-- The node representing the tabs at the top of the portlet. -->
 	var tabsNode = topBarNode.one('.nav-tabs');
+	<!-- The node that will be used to represent the caret inside the toggler button.  -->
 	var caretNode = null;
+	<!-- The node that represents the 'Visible Calendars' pane. -->
 	var calendarOptionsNode = calendarPortlet.one('.calendar-portlet-column-options');
+	<!-- The node that represents the block element that holds the calendar's -->
+	<!-- navigation controls (e.g. 'Add Event', 'Today, '<', '>', Month, Day, etc.). -->
 	var schedulerControlsNode = calendarPortlet.one('.scheduler-base-controls');
-	var dateControlsNode = schedulerControlsNode.one('.btn-group');
+	<!-- Condition representing whether or not the portlet has been in mobile view. -->
 	var stateMobile = false;
+	<!-- Strange offset value that seems to differ from actual page width. -->
 	var widthOffset = 17;
 
-	var <portlet:namespace />menuOrganizer = function() {
+	<!-- Function that is run on load for organization purposes. -->
+	var <portlet:namespace />loadOrganizer = function() {
+		<!-- Places the calendar controls outside of the scheduler component. -->
+		<!-- This allows the 'Viewable Calendars' side-pane to not squish -->
+		<!-- these controls in desktop view. -->
 		topBarNode.insert(schedulerControlsNode, 'after');
-		dateControlsNode.insert(calendarPortlet.one('.calendar-dropdown-view-menu'), 'before');
+
+		<!-- Inserts the dropdown taglib into the calendar controls. -->
+		<!-- Must be done this way because the controls live in the JS side -->
+		<!-- whereas taglibs must be generated on the server side. -->
+		schedulerControlsNode.one('.btn-group').insert(calendarPortlet.one('.calendar-dropdown-view-menu'), 'before');
 	}
 
-	var <portlet:namespace />collapseOnResize = function() {
+	<!-- Function that runs on load and resize for organization purposes. -->
+	var <portlet:namespace />viewOrganizer = function() {
 		var winWidth = win.width() + widthOffset;
 
+		<!-- On condition [Tablet/Mobile View] -->
 		if (winWidth < 992) {
+			<!-- Changes caret direction from vertical to horizontal to match -->
+			<!-- the new location and function of the toggler button. -->
 			caretNode = togglerNode.one('.icon-caret-right');
 			if (caretNode) caretNode.replaceClass('icon-caret-right', 'icon-caret-down');
 
 			caretNode = togglerNode.one('.icon-caret-left');
 			if (caretNode) caretNode.replaceClass('icon-caret-left', 'icon-caret-up');
 
+			<!-- Places the calendar controls after the 'Visible Calendars' pane. -->
+			<!-- This is so that the 'Visible Calendars' pane appears directly below -->
+			<!-- the toggle button. -->
+			<!-- Remove this line of code for a better understanding of what it does. -->
 			calendarOptionsNode.insert(schedulerControlsNode, 'after');
 
-			togglerNode.addClass('btn');
-			togglerNode.addClass('btn-default');
+			<!-- Gives the toggler button-styling when it becomes a button -->
+			<!-- in mobile view. -->
+			togglerNode.addClass('btn btn-default');
 
+			<!-- Moves the toggler button to the same container as the tabs -->
+			<!-- so that they occupy the same space. -->
 			tabsNode.appendChild(togglerNode);
 
 			stateMobile = true;
 		}
+		<!-- On condition [Was in Tablet/Mobile View] -->
+		<!-- Exists for the case when the user stretches -->
+		<!-- the window in and our without reloading. -->
 		else if (stateMobile) {
+			<!-- Returns caret direction from horizontal to vertical to match -->
+			<!-- the old location and function of the toggler button. -->
 			caretNode = togglerNode.one('.icon-caret-down');
 			if (caretNode) caretNode.replaceClass('icon-caret-down', 'icon-caret-right');
 
 			caretNode = togglerNode.one('.icon-caret-up');
 			if (caretNode) caretNode.replaceClass('icon-caret-up', 'icon-caret-left');
 
-			tabsNode.insert(schedulerControlsNode, 'after');
+			<!-- Returns the scheduler controls to its previous location. -->
+			topBarNode.insert(schedulerControlsNode, 'after');
 
-			togglerNode.removeClass('btn');
-			togglerNode.removeClass('btn-default');
+			<!-- Removes the button classes since they no longer apply. -->
+			togglerNode.removeClass('btn btn-default');
+
+			<!-- Returns the toggler button to its original location. -->
 			calendarPortlet.one('.calendar-portlet-wrapper').insert(togglerNode, 'before');
+
+			stateMobile = false;
 		}
 	};
 
+	<!-- Temporary "bug fix" since glyphicons don't appear to work. -->
+	<!-- When glyphicons are fixed, the CSS counterparts also need to be changed -->
+	<!-- the have the 'glyphicon-' prefix. -->
 	calendarPortlet.all('.glyphicon-chevron-left').replaceClass('glyphicon-chevron-left', 'icon-chevron-left')
 	calendarPortlet.all('.glyphicon-chevron-right').replaceClass('glyphicon-chevron-right', 'icon-chevron-right')
 
+	<!-- Calls the above two functions. -->
 	win.on(
-		'load', <portlet:namespace />menuOrganizer
+		'load', <portlet:namespace />loadOrganizer
 	);
 
 	win.on(
 		['resize', 'load'],
-		A.debounce(<portlet:namespace />collapseOnResize, 100)
+		A.debounce(<portlet:namespace />viewOrganizer, 100)
 	);
 
 
@@ -444,6 +518,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 			animated: true,
 			container: '#<portlet:namespace />calendarListContainer',
 			content: '.calendar-portlet-calendar-list',
+			<!-- Changes the toggler to be collapsed by default. -->
 			expanded: false,
 			header: '.calendar-portlet-list-header'
 		}
