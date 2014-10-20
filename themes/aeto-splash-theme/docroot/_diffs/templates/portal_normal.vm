@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+#parse ($init)
+
+<html class="$root_css_class" dir="#language ("lang.dir")" lang="$w3c_language_id">
+
+<head>
+	<title>$the_title - $company_name</title>
+
+	<meta content="initial-scale=1.0, width=device-width" name="viewport" />
+
+	$theme.include($top_head_include)
+</head>
+
+<body class="$css_class">
+
+<div class="loadpaper"></div>
+<div class="transition-container"></div>
+
+<a href="#main-content" id="skip-to-content">#language ("skip-to-content")</a>
+
+$theme.include($body_top_include)
+
+#dockbar()
+
+
+<div class="container-fluid" id="wrapper">
+	<div class="splash-bar top"></div>
+
+	<header id="banner" role="banner">
+		#*
+		<div id="heading">
+			<h1 class="site-title">
+				<a class="$logo_css_class" href="$site_default_url" title="#language_format ("go-to-x", [$site_name])">
+					<img alt="$logo_description" height="$site_logo_height" src="$site_logo" width="$site_logo_width" />
+
+					#if ($show_site_name)
+						<span class="site-name" title="#language_format ("go-to-x", [$site_name])">
+							$site_name
+						</span>
+					#end
+				</a>
+
+			</h1>
+
+			<h2 class="page-title">
+				<span>$the_title</span>
+			</h2>
+		</div>
+		*#
+
+		#if ($has_navigation || $is_signed_in)
+			#parse ("$full_templates_path/navigation.vm")
+		#end
+	</header>
+
+	<div id="content">
+		##<nav id="breadcrumbs">#breadcrumbs()</nav>
+
+		<canvas></canvas>
+
+		<div class="crystal-content">
+			<div class="aeto-crystal"></div>
+		</div>
+
+		<div class="splash-content"> 
+			<div class="logo-content">
+				<img class="aeto-logo" src="http://74.82.131.167/documents/10659/0/AETO_Logo/bdda86f7-79e4-40b3-b54d-62cd49522764?t=1413577304602">
+			</div>
+		</div>
+
+		<div class="splash-menu-content">
+			<div class="splash-menu">
+				
+				
+				<div class="menu-outlay">
+					<div class="top-line"></div>
+					
+					<div class="menu-items">
+						<div class="item"><div class="one">HELP</div></div>
+						<div class="item"><div class="two">AETHERBOARD</div></div>
+						<div class="item"><div class="three">PLAY</div></div>
+						<div class="item"><div class="four">CHRONICLE</div></div>
+						<div class="item"><div class="five">LOGOUT</div></div>
+					</div>
+					<div class="bottom-line"></div>
+
+					<div class="left-grad"></div>
+					<div class="right-grad"></div>
+				</div>
+				
+			</div>
+		</div>
+		
+		
+		#if ($selectable)
+			$theme.include($content_include)
+		#else
+			$portletDisplay.recycle()
+
+			$portletDisplay.setTitle($the_title)
+
+			$theme.wrapPortlet("portlet.vm", $content_include)
+		#end
+	</div>
+
+	<footer id="footer" role="contentinfo">
+	</footer>
+
+	<div class="splash-bar bottom"></div>
+</div>
+
+$theme.include($body_bottom_include)
+
+$theme.include($bottom_include)
+
+</body>
+
+</html>

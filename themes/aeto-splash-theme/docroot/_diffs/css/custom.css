@@ -1,0 +1,286 @@
+/* This file allows you to override default styles in one central location for easier upgrade and maintenance. */
+
+@import "compass/css3";
+@import "compass/css3/user-interface";
+
+@import url(http://fonts.googleapis.com/css?family=PT+Serif:400,700&subset=latin,latin-ext);
+@import url(http://fonts.googleapis.com/css?family=Cardo:400,700);
+
+.aui {
+	height: 100%;
+	
+	body {
+		height: 100%;
+		overflow: hidden;
+	}
+
+	#wrapper {
+		height: 100%;
+		padding: 0;
+	}
+}
+
+canvas {
+	height: calc(34% + 120px);
+	left: 0;
+	margin-left: auto;
+	margin-right: auto;
+	position: absolute;
+	right: 0;
+	width: 400px;
+	z-index: 2;
+}
+
+.splash-bar {
+	background: gray;
+	height: 8px;
+	position: absolute;
+	width: 100%;
+}
+
+.splash-bar.top {
+	@include background-image(linear-gradient(left, rgba(76,76,76,1) 0%,rgba(216,216,216,1) 100%));
+	
+	top: 0;
+}
+
+.splash-bar.bottom {
+	@include background-image(linear-gradient(left, rgba(216,216,216,1) 0%,rgba(76,76,76,1) 100%));
+
+	bottom: 0;
+}
+
+.crystal-content {
+	display: block;
+	left: 50%;
+	margin: auto;
+	position: absolute;
+	top: calc(34% - 150px);
+
+	.aeto-crystal {
+		@include user-select(none);
+		@include transition-duration(4.0s);
+	    @include transition-property(background-color);
+	    @include transition-timing-function(ease-in-out);
+
+		opacity: .7;
+		background-image: url("http://74.82.131.167/documents/10659/0/AETO+Crystal+Inverse/6ce3487b-5105-4247-966e-5867af9e67ac?t=1413669969000");
+		background-color: rgba(0, 0, 0, 0.8);
+		height: 275px;
+		left: -50%;
+		position: relative;
+		width: 250px;
+	}
+}
+
+.splash-content {
+	@include user-select(none);
+
+	display: block;
+	left: 50%;
+	margin: auto;
+	position: absolute;
+	top: 34%;
+
+	.logo-content {
+		left: -50%;
+		position: relative;
+		z-index: 3;
+
+		.aeto-logo {
+			@include transition-duration(1.25s);
+		    @include transition-property(all);
+		    @include transition-timing-function(ease-in-out);
+			@include user-select(none);
+
+			-khtml-user-drag: none;
+	  		-webkit-user-drag: none;
+	  		display: block;
+			margin: 0 auto;
+			opacity: 0;
+		}
+	}
+}
+
+.splash-menu-content {
+	@include user-select(none);
+
+	position:absolute;
+    left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
+	top: calc(34% + 170px);
+		
+	.splash-menu {
+		@include transition-duration(0.35s);
+	    @include transition-property(all);
+	    @include transition-timing-function(ease-in-out);
+
+		margin-top: 8px;
+		position: relative;
+		text-align: center;
+
+		.menu-outlay {
+			display: inline-block;
+		}
+
+		.left-grad, .right-grad {
+			@include transition-duration(0.35s);
+		    @include transition-property(all);
+		    @include transition-timing-function(ease-in-out);
+		    @include user-select(none);
+			
+			background-repeat: no-repeat;
+			height: 100%;
+			height: 47px;
+			margin-top: -47px;
+			pointer-events:none;
+			position: relative;
+			width: 50%;
+			z-index: 1;
+		}
+
+		.left-grad {
+			background-image: url("http://i.imgur.com/kUMXABZ.png");
+			background-position: left center;
+			left: 150px;
+		}
+
+		.right-grad {
+			background-image: url("http://i.imgur.com/uYsCvEl.png");
+			background-position: right center;
+			float: right;
+			right: 150px;
+		}
+
+		.top-line, .bottom-line {
+			@include transition-duration(.85s);
+		    @include transition-property(all);
+		    @include transition-timing-function(ease-out);
+
+			background: #6b6b6b;
+			height: 1px;
+			margin: 0 auto;
+			opacity: 0.1;
+			position: relative;
+			width: 0;
+		}
+
+		.menu-inlay {
+			display: inline-block;
+		}
+
+		.menu-items {
+			display: inline-block;
+			padding: 12px 0;
+			position: relative;
+			z-index: 0;
+
+			.item {
+				@include transition-duration(0.35s);
+			    @include transition-property(width, opacity);
+			    @include transition-timing-function(ease-in-out);
+
+				-webkit-font-smoothing: antialiased;
+				//font-family: 'PT Serif', serif;
+				color: #585858;
+				display: inline-block;
+				font-family: 'Cardo', serif;
+				font-size: 20px;
+				margin: 0 10px;
+				text-rendering: optimizeLegibility;
+				text-shadow: 0px 0px 1px rgba(51,51,51,0.25);
+				width: 160px;
+
+				&:hover {
+					&:before {
+			        	content: "\f101";
+			        	font-family: 'fontawesome-alloy';
+			        	line-height: 1;
+			        	margin-left: -16px;
+			        	position: absolute;
+			        	speak: none;
+			        }
+
+			        &:after {
+			        	content: "\f100";
+			        	font-family: 'fontawesome-alloy';
+			        	line-height: 1;
+			        	margin-left: 5px;
+			        	position: absolute;
+			        	speak: none;
+			        }
+			    }
+
+			    div {
+			    	-webkit-font-smoothing: antialiased;
+			    	display: inline-block;
+			    }
+
+				.one, .five {
+					@include transition-delay(0.15s);
+
+					opacity: 0;
+				}
+
+				.two, .three, .four {
+					@include transition-duration(0.55s);
+				    @include transition-property(width, opacity, top);
+				    @include transition-timing-function(ease-out);
+
+				    opacity: 0;
+				    position: relative;
+				    top: -14px;
+				}
+
+				.one {
+				}
+
+				.two {
+					//@include background-image(linear-gradient(left, rgba(255,255,255,0) 0%, rgba(88,88,88,1) 40%));
+				    
+				    //background-clip: text;
+				    //color: transparent;
+				    
+				    //-webkit-background-clip: text;
+				}
+
+				.four {
+					//@include background-image(linear-gradient(left, rgba(88,88,88,1) 0%, rgba(255,255,255,0) 80%));
+				    
+				    //background-clip: text;
+				    //color: transparent;
+				    
+				    //-webkit-background-clip: text;
+				}
+
+				.five {
+				}
+			}
+		}
+	}
+}
+
+.loadpaper {
+	background: #fff;
+	bottom: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 405;
+}
+
+.transition-container {
+	bottom: 0;
+	position: absolute;
+	transform-origin: bottom left;
+	z-index: 400;
+
+	.transition-stripe {
+		@include transition-duration(1.65s);
+		@include transition-property(width, height, margin);
+		@include transition-timing-function(ease-in-out);
+		@include background-image(linear-gradient(left, rgba(30,87,153,0) 0%,rgba(163,187,213,1) 32%,rgba(255,255,255,1) 54%));
+	}
+}
