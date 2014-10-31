@@ -1,13 +1,30 @@
 //Globals
 var isTablet = false,
 isPhone = false,
-lineWidths = 500;
+lineWidths = 500,
+resized = false,
+width = 0,
+height = 0;
 
 
 AUI().ready(
-	'liferay-hudcrumbs', 'liferay-navigation-interaction', 'liferay-sign-in-modal',
+	'liferay-hudcrumbs', 'liferay-navigation-interaction', 'liferay-sign-in-modal', 'liferay-dialog-window',
 	function(A) {
-		var navigation = A.one('#navigation');
+		var navigation = A.one('#navigation'),
+			rotation = -3,
+			rotationRate = 0,
+			loginKeyRate = null, 
+			acceleration = 1.5,
+			deceleration = .985,
+			buttonNode = null,
+			buttonHolderNode = null,
+			borderNode = null,
+			loginButtonSetter = null,
+			formNodes = null,
+			pwEntered = false,
+			idEntered = false,
+			loginVisible = false,
+			origHeightBtn = -1;
 
 		if (navigation) {
 			navigation.plug(Liferay.NavigationInteraction);
@@ -19,11 +36,384 @@ AUI().ready(
 			siteBreadcrumbs.plug(A.Hudcrumbs);
 		}
 
-		var signIn = A.one('li.sign-in a');
+		var loginNode = A.one('.item .five a');
 
-		if (signIn && signIn.getData('redirect') !== 'true') {
-			signIn.plug(Liferay.SignInModal);
+		if (Liferay.ThemeDisplay.isSignedIn()) {
+			loginNode.setHTML("LOGOUT");
 		}
+		else if (loginNode.getData('redirect') != 'true') {
+			var percent = 0,
+				circleMasks = null,
+				canvasNode = A.one('.particle-content'),			
+				crystalNode = A.one('.crystal-content'),
+				modalZ = 0,
+				signInOpen = false,
+				signInNode = null,
+				onceOpened = false,
+				lockExpand = false,
+				dotSteps = 1;
+
+			var errorNode = A.one('.columns-max');
+
+			if(errorNode) {
+				if (errorNode.one('.alert-error')) {
+					errorNode.remove();
+					errorNode = A.Node.create("<div class='error-box-container'><div class='error-box'><div class='error-icon'></div><div class='error-message'>Sorry! We couldn't process your login information, are you sure you entered it correctly?</div></div></div>");
+				
+					setTimeout(function() {
+						A.one('#wrapper').prepend(errorNode);
+
+						errorNode = errorNode.one('.error-box');
+						errorNode.on('hover', function() {
+							errorNode.setStyle('opacity', 0)
+							errorNode.setStyle('transform', 'scale(0)');
+						})
+					}, 1700);
+				}
+				else {
+					errorNode.remove();
+				}
+			}
+
+			loginNode.setAttribute('href', A.one('li.sign-in a').getAttribute('href'));
+			loginNode.plug(Liferay.SignInModal);
+
+			loginNode.on('click', function(e) {
+				checkSignIn();
+			});
+
+			function checkSignIn() {
+				if (A.one('#signinmodal') == null) setTimeout(checkSignIn, 100);
+				else {
+					signInOpen = true;
+
+					if (!onceOpened) {
+						onceOpened = true;
+						signInNode = A.one('#signinmodal');
+
+						A.one('#signinmodal .modal-content').prepend(A.Node.create('<div class="radial-progress"><div class="rotate-line"></div><div class="circle"><div class="mask full"><div class="fill"></div></div><div class="mask half"><div class="fill"></div><div class="fill fix"></div></div><div class="shadow"></div></div><div class="inset"></div></div>'));
+						circleMasks = [A.one('.circle .mask.full'), A.one('.circle .fill'), A.all('.circle .fill').item(1), A.one('.fill.fix')];
+						
+						signInNode.one('.btn.close').on('click', checkCloseSignIn);
+						A.one('.aui').on('key', checkCloseSignIn, 'esc');	
+					}
+
+					idEntered = false;
+					pwEntered = false;		
+					
+					// Crystal + Canvas Overlay & Animation Setup
+					crystalNode.addClass('notransition');
+					crystalNode.setStyle('opacity', 0);
+					canvasNode.addClass('notransition');
+					canvasNode.setStyle('opacity', 0);
+				
+					setTimeout(function() {
+						modalZ = parseInt(signInNode.getStyle('zIndex'));	
+
+						crystalNode.removeClass('notransition');
+						canvasNode.removeClass('notransition');
+
+						canvasNode.setStyle('bottom', 0);
+						canvasNode.setStyle('top', canvasNode.get('clientHeight') * -.85);
+						canvasNode.setStyle('zIndex', modalZ + 5);
+						crystalNode.setStyle('bottom', 0);
+						crystalNode.setStyle('top', -210);
+						crystalNode.setStyle('zIndex', modalZ + 4);
+
+						setTimeout(function() {
+							canvasNode.setStyle('opacity', '');
+							crystalNode.setStyle('opacity', '');
+						}, 400);	
+					}, 100);
+
+					// Accel/Decel Circle & Sign-In Button Animation
+					requestAnimationFrame(loginRotation);
+
+					setTimeout(function () {
+						buttonHolderNode = A.one('#signinmodal .button-holder');
+						buttonNode = buttonHolderNode.one('.btn');
+						borderNode = A.one('.border-circle');
+						formNodes = A.all('.sign-in-form .control-group .field');
+
+						buttonHolderNode.on('hover', function() {
+							idEntered = true;
+							pwEntered = true;
+							setLoginVisible();
+						});
+
+						formNodes.item(0).on('keypress', function() {idEntered = true;});
+						formNodes.item(1).on('keypress', function() {pwEntered = true;});
+						formNodes.item(0).on('keypress', rotationAccelerate);
+						formNodes.item(1).on('keypress', rotationAccelerate);
+
+						buttonNode.on('hover', rotateCircleMask, unrotateCircleMask);
+
+						setLoginVisible();
+
+						formNodes.item(0).on('keypress', setLoginVisible);
+						formNodes.item(1).on('keypress', setLoginVisible);
+						
+						if (!isPhone) {downDots();}
+
+						A.one('#signinmodal .control-group:first-of-type .field').setAttribute('placeholder', "Username");
+						A.one('#signinmodal .control-group:last-of-type .field').setAttribute('placeholder', "Password");
+					}, 200)
+					
+					percentIncrease();
+
+					if (isPhone) {
+						setTimeout(function() {
+							buttonHolderNode = A.one('#signinmodal .button-holder');
+							buttonNode = buttonHolderNode.one('.btn');
+							idEntered = true;
+							pwEntered = true;
+							setLoginVisible();
+						}, 200);
+					}
+				}
+			}
+
+			function downDots() {
+				var distance = 25;
+
+				if (!idEntered && !pwEntered && !loginVisible) {
+					if (dotSteps == 1) {
+						origHeightBtn = parseInt(buttonNode.getStyle('marginTop'));
+						buttonHolderNode.addClass('before-set');
+						dotSteps++;
+					}
+					
+					setTimeout(function() {
+						if (dotSteps == 2) {
+							buttonNode.setStyle('marginTop', origHeightBtn + distance);
+							buttonNode.setStyle('opacity', 0);
+							dotSteps++;
+						}
+
+						setTimeout(function() {
+							if (dotSteps == 3) {
+								buttonHolderNode.addClass('after-set');
+								dotSteps++;
+							}
+						}, 200)
+					}, 200)
+
+					setTimeout(function() {
+						if (dotSteps == 4) {
+							buttonNode.setStyle('marginTop', origHeightBtn - distance);
+							buttonHolderNode.addClass('before-reset');
+							buttonHolderNode.addClass('after-reset');
+							dotSteps++;
+						}
+					}, 1000);
+					
+					setTimeout(upDots, 1500);
+				}
+			}
+
+			function upDots() {
+				var bottom = 25;
+
+
+				if (signInOpen) {
+					if (dotSteps == 5) {
+						buttonHolderNode.removeClass('before-set');
+						buttonHolderNode.removeClass('before-reset');
+						dotSteps++;
+					}
+					setTimeout(function() {
+						if (dotSteps == 6) {
+							buttonNode.setStyle('marginTop', '');
+							buttonNode.setStyle('opacity', '');
+							dotSteps++;
+						}
+
+						setTimeout(function() {
+							if (dotSteps == 7) {
+								buttonHolderNode.removeClass('after-set');
+								buttonHolderNode.removeClass('after-reset');
+								dotSteps = 1;
+							}
+						}, 200)
+					}, 200)
+					
+					setTimeout(function() {
+						downDots();
+					}, 2000);
+				}
+			}
+
+			function setLoginVisible() {
+				console.log("run");
+				if ((idEntered && pwEntered) || loginVisible) {
+					console.log("run?");
+					buttonHolderNode = A.one('#signinmodal .button-holder');
+					buttonNode = buttonHolderNode.one('.btn');
+
+					loginVisible = true;
+					buttonNode.setStyle('borderRadius', '0');
+					buttonNode.setStyle('width', 80);
+					buttonNode.setStyle('height', 20);
+					buttonNode.setStyle('backfieldground', 'none');
+					buttonNode.setStyle('marginLeft', -40);
+					buttonNode.setStyle('fontSize', '20px');
+					buttonNode.setStyle('top', 161);
+					buttonNode.setStyle('background', 'none');
+					buttonNode.setStyle('marginTop', '');
+					buttonNode.setStyle('opacity', '');
+
+					buttonHolderNode.addClass('login-before login-after');
+					buttonHolderNode.removeClass('before-set');
+					buttonHolderNode.removeClass('before-reset');
+					buttonHolderNode.removeClass('after-set');
+					buttonHolderNode.removeClass('after-reset');
+				}		
+			}
+
+			function rotateCircleMask() {
+				if (!isPhone) {
+					circleMasks[0].setStyle('transform', 'rotate(180deg)');
+					circleMasks[1].setStyle('transform', 'rotate(180deg)');
+					circleMasks[2].setStyle('transform', 'rotate(180deg)');
+					circleMasks[3].setStyle('transform', 'rotate(360deg)');
+
+					setTimeout(function() {
+						if (!lockExpand) {
+							A.one('.radial-progress').setStyle('display', 'none');
+							borderNode.setStyle('opacity', '1');
+
+							//borderNode.setStyle('margin-top', -1 * parseInt(signInNode.getStyle('top')) + parseInt(A.one('.radial-progress').getStyle('height')) / 2 - 30 - width * .5);
+							//borderNode.setStyle('margin-left', -1 * parseInt(signInNode.getStyle('left')) + parseInt(A.one('.radial-progress').getStyle('width')) / 2 - 30 - width * .25);
+							borderNode.setStyle('height', width * 1.5);
+							borderNode.setStyle('width', width * 1.5);
+						}
+					}, 500);
+				}
+			}
+
+			function unrotateCircleMask() {
+				if (!isPhone && ! lockExpand) {
+					lockExpand = true;
+					borderNode.setStyle('height', '');
+					borderNode.setStyle('width', ''); 
+					
+					setTimeout(function() {
+						A.one('.radial-progress').setStyle('display', '');
+						borderNode.setStyle('opacity', '');
+					}, 300);
+			
+					setTimeout(function() {
+						A.one('.radial-progress').setStyle('display', '');
+						circleMasks[0].setStyle('transform', '');
+						circleMasks[1].setStyle('transform', '');
+						circleMasks[2].setStyle('transform', '');
+						circleMasks[3].setStyle('transform', '');
+
+						lockExpand = false;
+					}, 500);
+				}
+			}
+
+			function rotationAccelerate() {
+				if (rotationRate < .05) rotationRate = .1;
+				else if (rotationRate < 500) rotationRate *= acceleration;
+			}
+
+			function loginRotation() {
+				var rotateNode = A.one('#signinmodal .rotate-line');
+
+				if (rotateNode) {
+					if (rotationRate != 0) {				
+						rotation += rotationRate;
+
+						if (rotation >= 360) rotation = rotation % 360;
+						rotateNode.setStyle('transform', 'rotate(' + rotation + 'deg)');
+
+						rotationRate *= deceleration;
+						//if (rotationRate < .01) rotationRate = 0;
+					}
+					requestAnimationFrame(loginRotation);	
+				}
+			}
+
+			function checkCloseSignIn() {
+				canvasNode.addClass('notransition');
+				canvasNode.setStyle('opacity', 0);
+				crystalNode.addClass('notransition');
+				crystalNode.setStyle('opacity', 0);
+
+				setTimeout(function() {
+					crystalNode.removeClass('notransition');
+					canvasNode.removeClass('notransition');
+					canvasNode.setStyle('zIndex', '');
+					crystalNode.setStyle('zIndex', '');
+
+					setTimeout(function(){
+						canvasNode.setStyle('bottom', '');
+						canvasNode.setStyle('top', '');
+						crystalNode.setStyle('bottom', '');
+						crystalNode.setStyle('top', '');
+						
+						setTimeout(function() {
+							crystalNode.setStyle('opacity', '');
+							canvasNode.setStyle('opacity', '');
+						}, 400)
+					}, 200)
+				}, 50)
+				
+
+				if(signInNode.hasClass('modal-hidden')) {
+					signInOpen = false;
+				}
+
+				if(signInOpen == true) setTimeout(checkCloseSignIn, 200);
+			}
+
+			function percentIncrease() {
+				percent = 100;
+
+				if (percent < 100) setTimeout(percentIncrease, 200);
+			}
+
+			A.one('.nav-account-controls').remove();
+		}
+
+		//hover
+		var topLineNode = A.one('.top-line');
+		var bottomLineNode = A.one('.bottom-line');
+
+	    function over() {
+	    	if (!isTablet && !isPhone) {
+	    		topLineNode.setStyle('width', 850); //needs to be calculated
+		        bottomLineNode.setStyle('width', 850);
+		        
+		        A.one('.left-grad').setStyle('left', -180);
+		        A.one('.right-grad').setStyle('right', -180);
+		        A.one('.left-grad').setStyle('opacity', .3);
+		        A.one('.right-grad').setStyle('opacity', .3);
+
+		        A.one('.menu-items .item .one').setStyle('opacity', 1);
+		        A.one('.menu-items .item .five').setStyle('opacity', 1);
+	    	}
+	    }
+
+	    function out() {
+	    	if (!isTablet && !isPhone) {
+		        topLineNode.setStyle('width', 500);
+		        bottomLineNode.setStyle('width', 500);
+
+		        A.one('.left-grad').setStyle('left', '');
+		        A.one('.right-grad').setStyle('right', '');
+		        A.one('.left-grad').setStyle('opacity', '');
+		        A.one('.right-grad').setStyle('opacity', '');
+
+		        A.one('.menu-items .item .one').setStyle('opacity', 0);
+		        A.one('.menu-items .item .five').setStyle('opacity', 0);
+		    }
+	    }
+	   
+	    A.one('.splash-menu').on('hover', over, out);
+		//on 'scroll' delete bottom bar
 	}
 );
 
@@ -32,25 +422,27 @@ AUI().ready(
 AUI().ready(
 	function(A) {
 		var node = A.one("body"),
-		bodyNode = node,
-		win = A.one(window),
-		nodes = [],
-		width = bodyNode.get("winWidth"),
-		height = bodyNode.get("winHeight"),
-		diagonal = Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2)),
-		containerNode = A.one('.transition-container'),
-		angle = -90 + Math.atan(width / height) * (180 / Math.PI),
-		nodeCt = 0,
-		spaceCt = 0, //0-100% amount of screen space used
-		minWidth = 2, //2
-		maxWidth = 5, //5
-		curWidth = 0,
-		bgCss = "",
-		menuItems = [A.one('.item .one'), A.one('.item .two'), A.one('.item .three'), A.one('.item .four'), A.one('.item .five')],
-		topLineNode = A.one('.top-line'),
-		bottomLineNode = A.one('.bottom-line'),
-		nodesMaxLength = 0, //number of stripes at maximum generated by RNG
-		nodesPercentAnimate = 0.01; //at what % of stripes to begin other animations
+			bodyNode = node,
+			win = A.one(window),
+			nodes = [];
+
+		width = bodyNode.get("winWidth");
+		height = bodyNode.get("winHeight");
+
+		var diagonal = Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2)),
+			containerNode = A.one('.transition-container'),
+			angle = -90 + Math.atan(width / height) * (180 / Math.PI),
+			nodeCt = 0,
+			spaceCt = 0, //0-100% amount of screen space used
+			minWidth = 2, //2
+			maxWidth = 5, //5
+			curWidth = 0,
+			bgCss = "",
+			menuItems = [A.one('.item .one'), A.one('.item .two'), A.one('.item .three'), A.one('.item .four'), A.one('.item .five')],
+			topLineNode = A.one('.top-line'),
+			bottomLineNode = A.one('.bottom-line'),
+			nodesMaxLength = 0, //number of stripes at maximum generated by RNG
+			nodesPercentAnimate = 0.01; //at what % of stripes to begin other animations
 
 		win.on(
 			['resize', 'load'],
@@ -84,6 +476,8 @@ AUI().ready(
 
 		// Responsive Width
 		function widthChanges() {
+			resized = true;
+
 			if (isTablet || isPhone) {
 				menuItems[0].setStyle('opacity', 1);
 	        	menuItems[4].setStyle('opacity', 1);
@@ -111,6 +505,8 @@ AUI().ready(
         	}
 		}
 
+		// =================
+
 		containerNode.setStyle('-webkit-transform', "rotate(" + angle + "deg)");
 		containerNode.setStyle('-moz-transform', "rotate(" + angle + "deg)");
 		containerNode.setStyle('-ms-transform', "rotate(" + angle + "deg)");	
@@ -125,7 +521,6 @@ AUI().ready(
 			if (curWidth + spaceCt > 100) curWidth = 100 - spaceCt;
 			spaceCt += curWidth;
 
-			//console.log(spaceCt);
 			nodes.push(A.Node.create("<div class='transition-stripe'></div>"));
 			nodes[nodeCt].setStyle('width', diagonal * 2);
 			nodes[nodeCt].setStyle('height', curWidth + "%");
@@ -169,7 +564,6 @@ AUI().ready(
 				clearInterval(stripeWiper);
 				setTimeout(transitionComplete, 1700);
 				secondaryAnimations();
-				
 			}
 		}
 
@@ -184,13 +578,7 @@ AUI().ready(
 					bottomLineNode.setStyle('opacity', 0.8);
 
 					setTimeout(function() {
-						topLineNode.setStyle('-webkit-transition-duration', "0.45s");
-						topLineNode.setStyle('-moz-transition-duration', "0.45s");
-						topLineNode.setStyle('-o-transition-duration', "0.45s");
 						topLineNode.setStyle('transitionDuration', "0.45s");
-						bottomLineNode.setStyle('-webkit-transition-duration', "0.45s");
-						bottomLineNode.setStyle('-moz-transition-duration', "0.45s");
-						bottomLineNode.setStyle('-o-transition-duration', "0.45s");
 						bottomLineNode.setStyle('transitionDuration', "0.45s");
 
 						menuItems[1].setStyle('opacity', 1);
@@ -230,50 +618,10 @@ AUI().ready(
 		}
 
 		var stripeWiper = setInterval(wipeStripe, 50);
-
-		//console.log(width + " " + height + " " + diagonal + " " + angle);
 	}
 );
 
 // Hover event
-
-AUI().use('event-hover', 'transition', function (A) {
-	var topLineNode = A.one('.top-line');
-	var bottomLineNode = A.one('.bottom-line');
-
-    function over() {
-    	if (!isTablet && !isPhone) {
-    		topLineNode.setStyle('width', 850); //needs to be calculated
-	        bottomLineNode.setStyle('width', 850);
-	        
-	        A.one('.left-grad').setStyle('left', -180);
-	        A.one('.right-grad').setStyle('right', -180);
-	        A.one('.left-grad').setStyle('opacity', .3);
-	        A.one('.right-grad').setStyle('opacity', .3);
-
-	        A.one('.menu-items .item .one').setStyle('opacity', 1);
-	        A.one('.menu-items .item .five').setStyle('opacity', 1);
-    	}
-    }
-
-    function out() {
-    	if (!isTablet && !isPhone) {
-	        topLineNode.setStyle('width', 500);
-	        bottomLineNode.setStyle('width', 500);
-
-	        A.one('.left-grad').setStyle('left', '');
-	        A.one('.right-grad').setStyle('right', '');
-	        A.one('.left-grad').setStyle('opacity', '');
-	        A.one('.right-grad').setStyle('opacity', '');
-
-	        A.one('.menu-items .item .one').setStyle('opacity', 0);
-	        A.one('.menu-items .item .five').setStyle('opacity', 0);
-	    }
-    }
-    // Two callbacks, `mouseenter` and `mouseleave`
-   
-    A.one('.splash-menu').on('hover', over, out);
-});
 
 // SFX
 
@@ -282,9 +630,9 @@ AUI().ready(
 		// ====================== Crystal Color Cycling ======================
 		var idx = 0;
 		var colorCycle = [
-			"rgba(255, 0, 0,0.8)",
-			"rgba(0, 230, 0,0.8)",
-			"rgba(0, 0, 255 ,0.8)",
+			"rgba(255, 0, 0,",
+			"rgba(0, 230, 0,",
+			"rgba(0, 0, 255,",
 		];
 
 		myTimer();
@@ -292,7 +640,10 @@ AUI().ready(
 
 		function myTimer() {
 			if(idx > colorCycle.length) idx = 0;
-			A.one('.aeto-crystal ').setStyle('backgroundColor', colorCycle[idx]);
+			A.one('.aeto-crystal ').setStyle('backgroundColor', colorCycle[idx] + " 0.8)");
+			if (A.one('.radial-progress ')) A.one('.radial-progress ').setStyle('backgroundColor', colorCycle[idx] + " 0.8)");
+			if (isPhone && A.one('#signinmodal')) A.one('#signinmodal').setStyle('boxShadow', '0px -10px 0px 1px ' + colorCycle[idx] + " 0.4)");
+			else if (A.one('#signinmodal')) A.one('#signinmodal').setStyle('boxShadow', '');
 			idx++;
 		}
 
@@ -308,7 +659,7 @@ AUI().ready(
 		blankTime = 80, //0
 		fadeIn = 100, //0
 		fadeStill = 20, //200
-		maxOpacity = .5, //1
+		maxOpacity = .400, //1
 		colorCt = 0,
 		colorSpd = .3
 		activeEmitter = 0;
@@ -318,7 +669,6 @@ AUI().ready(
 
 		canvas.width = A.one('canvas').get('clientWidth');
 		canvas.height = A.one('canvas').get('clientHeight');
-		//canvas.height = window.innerHeight;
 
 		function Particle(point, velocity, acceleration) {
 			this.position = point || new Vector(0, 0);
@@ -399,40 +749,27 @@ AUI().ready(
 		Emitter.prototype.emitParticle = function() {
 			// Use an angle randomized over the spread so we have more of a "spray"
 			var angle = this.velocity.getAngle() + this.spread - (Math.random() * this.spread * 2);
-
-			// The magnitude of the emitter's velocity
 			var magnitude = this.velocity.getMagnitude();
-
-			// The emitter's position
 			var position = new Vector(this.position.x, this.position.y);
-
-			// New velocity based off of the calculated angle and magnitude
 			var velocity = Vector.fromAngle(angle, magnitude);
 
-			// return our new Particle!
 			return new Particle(position,velocity);
 		};
 
 		function addNewParticles() {
-			// if we're at our max, stop emitting.
+			// stop emitting at max
 			if (particles.length > maxParticles) return;
 
-			// for each emitter
-			//for (var i = 0; i < emitters.length; i++) {
 
 			emissionPermit += emissionRate;
-			// emit [emissionRate] particles and store them in our particles array\
+
 			//console.log(Math.round(Math.random() * (emitters.length - 1)));
 			if (emissionPermit >= 1.0) {
 				for (var i = 0; i < emissionCount; i++) {
 					particles.push(emitters[activeEmitter].emitParticle());
-
 				}
-				
 				emissionPermit = 0;
 			}
-
-			//}
 		}
 
 		function plotParticles(boundsX, boundsY) {
@@ -448,11 +785,7 @@ AUI().ready(
 
 				// Update velocities and accelerations to account for the fields
 				particle.submitToFields(fields);
-
-				// Move our particles
 				particle.move();
-
-				// Add this particle to the list of current particles
 				currentParticles.push(particle);
 			}
 
@@ -475,13 +808,13 @@ AUI().ready(
 
 				if (particles[i].fadeProgress > blankTime) {
 					if (particles[i].fadeProgress < fadeIn + blankTime) {
-						ctx.fillStyle = 'hsla(' + colorCt + ', 100%, 70%, ' + (particles[i].fadeProgress - blankTime) / fadeIn * maxOpacity + ')';
+						ctx.fillStyle = 'hsla(' + colorCt + ', 80%, 60%, ' + (particles[i].fadeProgress - blankTime) / fadeIn * maxOpacity + ')';
 					}
 					else if (particles[i].fadeProgress < fadeIn + fadeStill + blankTime) {
-						ctx.fillStyle = 'hsla(' + colorCt + ', 100%, 70%, ' + maxOpacity + ')';
+						ctx.fillStyle = 'hsla(' + colorCt + ', 80%, 60%, ' + maxOpacity + ')';
 					}
 					else {
-						ctx.fillStyle = 'hsla(' + colorCt + ', 100%, 70%, ' + (fadeTime - (particles[i].fadeProgress - fadeIn - fadeStill - blankTime)) / fadeTime * maxOpacity + ')';
+						ctx.fillStyle = 'hsla(' + colorCt + ', 80%, 60%, ' + (fadeTime - (particles[i].fadeProgress - fadeIn - fadeStill - blankTime)) / fadeTime * maxOpacity + ')';
 					}
 
 					var position = particles[i].position;
@@ -490,7 +823,7 @@ AUI().ready(
 					ctx.arc(position.x, position.y, particleSize, 0, Math.PI * 2);
 					ctx.closePath();
 					ctx.fill();
-					ctx.shadowColor = 'hsla(' + colorCt + ', 100%, 75%,  1)';
+					ctx.shadowColor = 'hsla(' + colorCt + ', 80%, 75%,  1)';
 				    ctx.shadowBlur = 4;
 				    ctx.shadowOffsetX = 0;
 				    ctx.shadowOffsetY = 0;
@@ -511,16 +844,12 @@ AUI().ready(
 		var midX = canvas.width / 2;
 		var midY = canvas.height / 2; 
 
-		// Add one emitter located at `{ x : 100, y : 230}` from the origin (top left)
-		// that emits at a velocity of `2` shooting out from the right (angle `0`)
 		var emitters = [
 			//new Emitter(new Vector(midX, midY), Vector.fromAngle(-2.5, 2.5))
 			new Emitter(new Vector(midX, canvas.height - 50), Vector.fromAngle(20.42, 1)),
 			new Emitter(new Vector(midX + 45, canvas.height - 190), Vector.fromAngle(100, 4))
 		];
 
-		// Add one field located at `{ x : 400, y : 230}` (to the right of our emitter)
-		// that repels with a force of `140`
 		var fields = [
 			new Field(new Vector(midX, canvas.height - 20), -8),
 			new Field(new Vector(midX, 0), 0)
@@ -593,8 +922,6 @@ AUI().ready(
 			activeEmitter = 1;
 			fields.push(new Field(new Vector(midX - 80, canvas.height - 100), 6000));
 			fields.push(new Field(new Vector(midX + 20, canvas.height - 100), 1000));
-			
-			//array.splice(1, 1);
 		}
 
 		function offItem () {
@@ -611,5 +938,100 @@ AUI().ready(
 				thisNode.on("hover", overItem, offItem);
 			}
 		);
+	}
+);
+
+
+AUI().ready(
+	'aui-popover',
+	'widget-anim',
+	function(A) {
+		var menuItems = A.all('.splash-menu .menu-items .item');
+		var defaultVisible = false;
+
+		var pop1 = new A.Popover({
+			align: {
+				node: menuItems.item(0),
+				points:[A.WidgetPositionAlign.TL, A.WidgetPositionAlign.BL]
+			},
+			headerContent: 'Not yet availabe.',
+			plugins: [A.Plugin.WidgetAnim],
+			position: 'bottom',
+			visible: defaultVisible
+		}).render();
+
+		var pop2 = new A.Popover({
+			align: {
+				node: menuItems.item(1),
+				points:[A.WidgetPositionAlign.TL, A.WidgetPositionAlign.BL]
+			},
+			headerContent: 'Not yet availabe.',
+			plugins: [A.Plugin.WidgetAnim],
+			position: 'bottom',
+			visible: defaultVisible
+		}).render();
+
+		var pop3 = new A.Popover({
+			align: {
+				node: menuItems.item(2),
+				points:[A.WidgetPositionAlign.TL, A.WidgetPositionAlign.BL]
+			},
+			headerContent: 'Not yet availabe.',
+			plugins: [A.Plugin.WidgetAnim],
+			position: 'bottom',
+			visible: defaultVisible
+		}).render();
+
+		var pop4 = new A.Popover({
+			align: {
+				node: menuItems.item(3),
+				points:[A.WidgetPositionAlign.TL, A.WidgetPositionAlign.BL]
+			},
+			headerContent: 'Not yet availabe.',
+			plugins: [A.Plugin.WidgetAnim],
+			position: 'bottom',
+			visible: defaultVisible
+		}).render();
+
+		menuItems.item(0).on(
+			'hover',
+			function() {
+				pop1.set('visible', !pop1.get('visible'));
+			},
+			function() {
+				pop1.set('visible', !pop1.get('visible'));
+			}
+		);
+
+		menuItems.item(1).on(
+			'hover',
+			function() {
+				pop2.set('visible', !pop2.get('visible'));
+			},
+			function() {
+				pop2.set('visible', !pop2.get('visible'));
+			}
+		);
+
+		menuItems.item(2).on(
+			'hover',
+			function() {
+				pop3.set('visible', !pop3.get('visible'));
+			},
+			function() {
+				pop3.set('visible', !pop3.get('visible'));
+			}
+		);
+
+		menuItems.item(3).on(
+			'hover',
+			function() {
+				pop4.set('visible', !pop4.get('visible'));
+			},
+			function() {
+				pop4.set('visible', !pop4.get('visible'));
+			}
+		);
+
 	}
 );
