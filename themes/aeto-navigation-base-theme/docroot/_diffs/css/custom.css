@@ -1,0 +1,1400 @@
+$FontAwesomePath: "aui/alloy-font-awesome/font" !default;
+
+@import "aui/alloy-font-awesome/scss/mixins-alloy";
+@import "aui/alloy-font-awesome/scss/variables";
+@import "compass";
+@import "compass/css3/user-interface";
+@import "mixins";
+
+@import url(http://fonts.googleapis.com/css?family=PT+Serif:400,700);
+@import url(http://fonts.googleapis.com/css?family=Cardo:400,700);
+@import url(http://fonts.googleapis.com/css?family=Lora:400,700);
+@import url(http://fonts.googleapis.com/css?family=Noto+Serif:400,700);
+@import url(http://fonts.googleapis.com/css?family=Cinzel:400,700);
+@import url(http://fonts.googleapis.com/css?family=Muli:400);
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400);
+
+
+// ==================== Mixins =====================
+
+@mixin animation-name($name) {
+	-o-animation-name: $name;
+	-moz-animation-name: $name;
+	-webkit-animation-name: $name;
+	animation-name: $name;
+}
+
+@mixin animation-duration($duration) {
+	-o-animation-duration: $duration;
+	-moz-animation-duration: $duration;
+	-webkit-animation-duration: $duration;
+	animation-duration: $duration;
+}
+
+@mixin animation-timing-function($timing) {
+	-o-animation-timing-function: $timing;
+	-moz-animation-timing-function: $timing;
+	-webkit-animation-timing-function: $timing;
+	animation-timing-function: $timing;
+}
+
+@mixin animation-iteration-count($count) {
+	-o-animation-iteration-count: $count;
+	-moz-animation-iteration-count: $count;
+	-webkit-animation-iteration-count: $count;
+	animation-iteration-count: $count;
+}
+
+@mixin animation-delay($delay) {
+    -moz-animation-delay:    $delay;
+    -o-animation-delay:      $delay;
+    -webkit-animation-delay: $delay;
+    animation-delay:         $delay;
+}
+
+@mixin animation($animation...) {
+  -o-animation: $animation;
+  -moz-animation: $animation;
+  -webkit-animation: $animation;
+  animation: $animation;
+}
+
+@mixin animation-play-state($state...) {
+  -o-animation-play-state: $state;
+  -moz-animation-play-state: $state;
+  -webkit-animation-play-state: $state;
+  animation-play-state: $state;
+}
+
+@mixin keyframes($name) {
+	@-o-keyframes $name { @content };
+	@-moz-keyframes $name { @content };
+	@-webkit-keyframes $name { @content }; 
+	@-keyframes $name { @content };
+}
+
+// ==================================================
+
+.aui {
+	height: 100%;
+	
+	body {
+		height: 100%;
+		overflow: hidden;
+		padding: 0;
+	}
+
+	#wrapper {
+		height: 100%;
+		overflow: hidden;
+		padding: 0;
+		position: relative;
+	}
+
+	#content {
+		display: none;
+	    overflow-y: auto;
+    	height: 80%;
+	}
+}
+
+// Navigation Variables
+$arrowBorder: 18px;
+$arrowShadow: 12px;
+$arrowShadowColor: black; 
+$arrowWidth: 50px;
+$barHeight: 56px;
+$itemMargin: 10px;
+$logoBoxWidth: 220px;
+$menuArrowWidth: 50px;
+$arrowShadowOpacity: .06;
+$bgColor: #FFF;
+$totalLogoWidth: $logoBoxWidth + $arrowWidth + $arrowBorder;
+$menuItemWidthOffset: 15px;
+$firstItemOffset: 10px;
+$menuOffColor: #FBFBFB;
+$startDelay: 1s;
+$baseMenuDelay: 0.5s;
+$menuItemDelay: 0.25s;
+$menuItemSpeed: 0.65s;
+$menuItemShadowSpeed: 0.55s;
+$menuItemShadowDelay: 0.4s;
+$menuItemShadowAnim: 20px;
+$bgExitDelay: 2.8s;
+$hoverArrowShadowColor: #F0F0F0;
+$tempColor: #71d2ff;
+$innerArrowOpacity: .4;
+
+$menuItemWidth1: calc(#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.125);
+$menuItemWidth2: calc(#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.25);
+$menuItemWidth3: calc(#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.375);
+$menuItemWidth4: calc(#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.5);
+$menuItemWidth5: calc(#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.625);
+$menuItemWidth6: calc(#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.75);
+$menuItemWidth7: calc(#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.875);
+$menuItemWidth8: calc(#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.1);
+
+$menuItemMargin1: calc(-1 * (#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.125));
+$menuItemMargin2: calc(-1 * (#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.25));
+$menuItemMargin3: calc(-1 * (#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.375));
+$menuItemMargin4: calc(-1 * (#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.5));
+$menuItemMargin5: calc(-1 * (#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.625));
+$menuItemMargin6: calc(-1 * (#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.75));
+$menuItemMargin7: calc(-1 * (#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.875));
+$menuItemMargin8: calc(-1 * (#{$totalLogoWidth + $firstItemOffset} - (100% - #{$totalLogoWidth}) * -.1));
+
+$menuItemMinWidth1: 432px;
+$menuItemMinWidth2: 566px;
+$menuItemMinWidth3: 700px;
+$menuItemMinWidth4: 834px;
+$menuItemMinWidth5: 968px;
+$menuItemMinWidth6: 1102px;
+$menuItemMinWidth7: 1236px;
+$menuItemMinWidth8: 1370px;
+
+#banner {
+	position: relative;
+	z-index: 10;
+}
+
+#navigation {
+	margin: 0;
+
+	.aeto-bar {
+		@include border-radius(0);
+
+		background-image: none;
+		background: #FFF;
+		border: 0;
+		height: $barHeight;
+		padding: 0;
+
+		.aeto-logo-container {
+			@include transition-duration(.45s);
+			@include transition-property(all);
+			@include transition-timing-function(ease-in-out);
+
+			display: inline-block;
+			height: $barHeight;
+			overflow: hidden;
+			position: absolute;
+			z-index: 12;
+			width: #{$logoBoxWidth + $arrowWidth + $arrowBorder + $arrowShadow + 5};
+
+			.rotation-layer {
+				@include animation(logo-enter .65s ease-in-out $startDelay+.20s 1 forwards);
+
+				opacity: 0;
+				transform-origin: 0% 50%;
+
+				.logo-box {
+					@include transition-duration(.45s);
+					@include transition-property(all);
+					@include transition-timing-function(ease-in-out);
+
+					display: inline-block;
+					height: $barHeight;
+					left: 0;
+					position: relative;
+					vertical-align: top;
+					width: $logoBoxWidth;
+					z-index: 2;
+
+					.logo-icon-container {
+						display: inline-block;
+
+						.logo-icon {
+							background: $tempColor;
+							left: 22px;
+							position: relative;
+							top: 5px;
+						}
+					}
+
+					.logo-text {
+						color: rgb(153, 153, 153);
+						display: inline-block;
+						float: right;
+						font-family: 'Cinzel', serif;
+						font-size: 32px;
+						font-weight: 700;
+						line-height: $barHeight;
+						margin-top: 2px;
+						position: relative;
+						right: 12px;
+
+						div {
+							display: inline-block;
+							margin-right: 3px;
+
+							&:hover {
+								@include animation(letter-rotate .75s linear 0s infinite);
+							}
+						}
+					}
+				}
+
+				.arrow-edge {
+					@include transition-duration(.45s);
+					@include transition-property(all);
+					@include transition-timing-function(ease-in-out);
+
+					display: inline-block;
+					height: $barHeight ;
+					margin-left: -4px;
+					position: relative;
+					top: -#{$barHeight/2 * 5};
+					left: -#{$arrowWidth * 5 - 4};
+					z-index: 1;
+					width: $arrowWidth + $arrowBorder + $arrowShadow;
+
+					div {
+						@include transition-duration(.45s);
+						@include transition-property(left, margin);
+						@include transition-timing-function(ease-in-out);
+
+						left: 0;
+					}
+
+					.main-arrow {
+						border-bottom: $barHeight*3 solid transparent;
+						border-left: $arrowWidth*6 solid #FFF;
+						border-top: $barHeight*3 solid transparent;
+						height: 0; 
+						position: absolute;
+						width: 0; 
+						z-index: 2;
+					}
+
+					.color-arrow {
+						@include box-shadow(-$arrowBorder 0 0 0 $tempColor);
+						
+						border-bottom: $barHeight*3 solid transparent;
+						border-left: $arrowWidth*6 solid $tempColor;
+						border-top: $barHeight*3 solid transparent;
+						height: 0; 
+						margin-left: $arrowBorder;
+						position: absolute;
+						width: 0;
+						z-index: 1;
+					}
+
+					.white-arrow {
+						@include box-shadow(-$arrowBorder 0 0 0 #FFF);
+						
+						border-bottom: $barHeight*3 solid transparent;
+						border-left: $arrowWidth*6 solid #FFF;
+						border-top: $barHeight*3 solid transparent;
+						height: 0; 
+						margin-left: $arrowBorder;
+						position: absolute;
+						width: 0;
+						z-index: 1;
+					}
+
+					.background-arrow {
+						@include box-shadow(#{-$arrowBorder - $arrowShadow} 0 0 0 $arrowShadowColor);
+						
+						border-bottom: $barHeight*3 solid transparent;
+						border-left: $arrowWidth*6 solid $arrowShadowColor;
+						border-top: $barHeight*3 solid transparent;
+						height: 0; 
+						margin-left: #{$arrowBorder + $arrowShadow};
+						opacity: $arrowShadowOpacity;
+						position: absolute;
+						width: 0;
+						z-index: 0;
+					}
+				}
+			}
+			
+
+		}
+
+		.aeto-bar-bg-container {
+			@include animation(bg-enter .55s ease-in $startDelay 1 forwards, bg-enter .65s ease-in $startDelay+$bgExitDelay 1 forwards reverse);
+
+			opacity: 0;
+			height: $barHeight;
+			position: absolute;
+			width: calc(100% - -#{$arrowWidth + $arrowShadow});
+
+			.aeto-bar-bg {
+				@include transition-duration(.35s);
+				@include transition-property(all);
+				@include transition-timing-function(ease-in-out);
+
+				background: rgb(195, 195, 195); //starts gray, fades to white
+				display: inline-block;
+				height: 100%;
+				position: relative;
+				width: calc(100% - #{$arrowWidth} - #{$arrowShadow});
+				z-index: 1;
+			}
+
+			.arrow-edge {
+				display: inline-block;
+				height: $barHeight;
+				margin-right: -4px;
+				vertical-align: top;
+				width: $menuArrowWidth + $arrowShadow;
+
+				.main-arrow {
+					border-bottom: ($barHeight)/2 solid transparent;
+					border-right: $menuArrowWidth solid rgb(195, 195, 195);
+					border-top: ($barHeight)/2 solid transparent;
+					height: 0;
+					left: $arrowShadow;
+					position: absolute;
+					width: 0; 
+					z-index: 2;
+				}
+
+				.background-arrow {
+					@include box-shadow($arrowShadow 0 0 0 #F5F5F5);
+
+					border-bottom: ($barHeight)/2 solid transparent;
+					border-right: $menuArrowWidth solid #F5F5F5;
+					border-top: ($barHeight)/2 solid transparent;
+					height: 0;
+					position: absolute;
+					width: 0; 
+					z-index: 1;
+				}
+			}
+		}
+
+		.aeto-final-stripe-container {
+			@include animation(stripe-enter .55s ease-in $startDelay+.55s 1 forwards);
+
+			height: $barHeight - $itemMargin;
+			margin-top: calc(#{$itemMargin}/2 - 2px);
+			opacity: 0;
+			position: absolute;
+			width: calc(100% - -#{$arrowWidth + $arrowShadow});
+			z-index: 1;
+
+			.aeto-final-stripe {
+				@include transition-duration(.35s);
+				@include transition-property(all);
+				@include transition-timing-function(ease-in-out);
+
+				background: #FFF;
+				border-bottom: 2px;
+				border-top: 2px;
+				border-color: #F5F5F5;
+				border-left: 0;
+				border-right: 0;
+				border-style: solid;
+				display: inline-block;
+				height: 100%;
+				position: relative;
+				width: calc(100% - #{$arrowWidth} - #{$arrowShadow});
+				z-index: 1;
+			}
+			
+			.arrow-edge {
+				display: inline-block;
+				height: $barHeight - $itemMargin;
+				margin-left: -4px;
+				vertical-align: top;
+				width: $menuArrowWidth + $arrowShadow;
+
+				.main-arrow {
+					border-bottom: ($barHeight - $itemMargin + 4)/2 solid transparent;
+					border-left: $menuArrowWidth solid #FFF;
+					border-top: ($barHeight - $itemMargin + 4)/2 solid transparent;
+					height: 0; 
+					position: absolute;
+					width: 0; 
+					z-index: 2;
+				}
+
+				.background-arrow {
+					border-bottom: ($barHeight - $itemMargin + 4)/2 solid transparent;
+					border-left: $menuArrowWidth solid #F5F5F5;
+					border-top: ($barHeight - $itemMargin + 4)/2 solid transparent;
+					height: 0; 
+					margin-left: $arrowShadow;
+					position: absolute;
+					width: 0; 
+					z-index: 1;
+				}
+			}
+		}
+
+		.aeto-hover-bar-container {
+			$hoverArrowHeight: 12px;
+
+			width: 100%;
+			height: $barHeight;
+			pointer-events:none;
+			position: absolute;
+			z-index: 10;
+
+			.left-hover-bar-container, .right-hover-bar-container {
+				@include transition-duration(.35s);
+				@include transition-property(all);
+				@include transition-timing-function(ease-in-out);
+
+				width: calc(100% - #{-$arrowWidth - $arrowShadow});
+				height: $barHeight;
+				position: absolute;
+
+				.left-hover-bar, .right-hover-bar {
+					width: calc(100% - #{$arrowWidth + $arrowShadow});
+					height: $barHeight;
+					position: relative;
+					display: inline-block;
+
+					.inner-bar {
+						@include animation(arrow-pulsation 1.8s ease-in-out $startDelay infinite);
+
+						height: $barHeight/2;
+						position: absolute;
+						right: 0;
+						top: 25%;
+						width: calc(12% - -15px);
+						opacity: $innerArrowOpacity;
+					}
+				}
+			}
+
+			.left-hover-bar-container {		
+				left: calc(#{-$arrowWidth - $arrowShadow} - 100%);
+
+				.left-hover-bar {
+					@include background-image(linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 45%,rgba(255,255,255,1) 100%));
+					
+					.inner-bar {
+						@include background-image(linear-gradient(left, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%));
+
+						background-color: $tempColor;
+					}
+				}
+
+				.arrow-edge {
+					margin-left: -4px;
+
+					.main-arrow {
+						border-left: $menuArrowWidth solid #FFF;
+					}
+
+					.background-arrow {
+						@include box-shadow(-$arrowShadow 0 0 0 $hoverArrowShadowColor);
+
+						border-left: #{$menuArrowWidth - $hoverArrowHeight} solid $hoverArrowShadowColor;
+						margin-left: $arrowShadow;
+					}
+
+					.color-arrow {
+						border-left: $menuArrowWidth*.5 solid $tempColor;
+						position: absolute;
+					}
+				}	
+			}
+
+			.right-hover-bar-container {
+				right: calc(#{-$arrowWidth - $arrowShadow} - 100%);
+
+				.right-hover-bar {
+					@include background-image(linear-gradient(left, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 45%,rgba(255,255,255,0) 100%));
+
+					.inner-bar {
+						@include background-image(linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%));
+
+						background-color: $tempColor;
+						left: 0;
+					}
+				}
+
+				.arrow-edge {
+					margin-right: -4px;
+					float: left;
+
+					.main-arrow {
+						border-right: $menuArrowWidth solid #FFF;
+						left: $arrowShadow;
+					}
+
+					.background-arrow {
+						@include box-shadow($arrowShadow 0 0 0 $hoverArrowShadowColor);
+
+						border-right: #{$menuArrowWidth - $hoverArrowHeight} solid $hoverArrowShadowColor;
+						left: $hoverArrowHeight;
+					}
+
+					.color-arrow {
+						border-right: $menuArrowWidth*.5 solid $tempColor;
+						float: right;
+						position: relative;
+					}
+				}
+			}
+
+			.arrow-edge {
+				display: inline-block;
+				height: $barHeight;
+				
+				vertical-align: top;
+				width: $menuArrowWidth + $arrowShadow;
+
+				.main-arrow {
+					border-bottom: $barHeight/2 solid transparent;
+					border-top: $barHeight/2 solid transparent;
+					height: 0; 
+					position: absolute;
+					width: 0; 
+					z-index: 2;
+				}
+
+				.background-arrow {
+					border-bottom: $barHeight/2 solid transparent;
+					border-top: $barHeight/2 solid transparent;
+					height: 0; 
+					position: absolute;
+					width: 0; 
+					z-index: 1;
+				}
+
+				.color-arrow {
+					@include animation(arrow-pulsation 1.8s ease-in-out $startDelay infinite);
+
+					border-bottom: $barHeight/2*.5 solid transparent;
+					border-top: $barHeight/2*.5 solid transparent;
+					height: 0;
+					margin-top: $barHeight*.25;
+					opacity: $innerArrowOpacity;
+					width: 0; 
+					z-index: 3;
+				}
+			}
+		}
+
+		.collapse {
+			position: absolute;
+			top: 0;
+			margin: $itemMargin/2 0 0 0;
+			width: 100%;
+
+			.aeto-pages {
+				padding: 0;
+				width: 100%;
+
+				.lfr-nav-item {
+					@include transition-duration(.35s);
+					@include transition-property(all);
+					@include transition-timing-function(ease-in-out);
+
+					display: inline-block;
+					height: $barHeight - $itemMargin;
+					opacity: 0;
+					position: absolute;
+
+					.aeto-menu-bar-item {
+						background: #FFF;
+						display: inline-block;
+						height: 100%;
+						margin: 0;
+						padding: 0;
+						position: relative;
+						text-align: center;
+						vertical-align: top;
+						width: calc(100% - #{$menuArrowWidth + $arrowShadow});
+						z-index: 2;
+					}
+
+					a {
+						@include box-shadow(none);
+						@include transition-duration(.35s);
+						@include transition-property(all);
+						@include transition-timing-function(ease-in-out);
+
+						color: #B3B3B3;
+						font-family: 'Cinzel', serif;
+						font-family: 'Muli', sans-serif;
+						font-family: 'Montserrat', sans-serif;
+						font-size: 18px;
+						height: 100%;
+						line-height: $barHeight - $itemMargin;
+						margin: 0;
+						padding: 0;
+						position: absolute;
+						right: 0;
+						text-align: center;
+						text-transform: uppercase;
+						top: 0;
+						background-color: transparent;
+						z-index: 3;
+
+						&:hover {
+							transform: scale(1.2);
+						}
+					}
+
+					.menu-arrow-edge {
+						margin-left: -4px;
+						display: inline-block;
+						width: $menuArrowWidth + $arrowShadow;
+						height: $barHeight - $itemMargin;
+
+						.main-arrow {
+							border-bottom: ($barHeight - $itemMargin)/2 solid transparent;
+							border-left: $menuArrowWidth solid #FFF;
+							border-top: ($barHeight - $itemMargin)/2 solid transparent;
+							height: 0; 
+							position: absolute;
+							width: 0; 
+							z-index: 2;
+						}
+
+						.background-arrow {
+							@include box-shadow(-$arrowShadow - $menuItemShadowAnim 0 0 0 $arrowShadowColor);
+							@include transition-duration(.35s);
+							@include transition-property(all);
+							@include transition-timing-function(ease-in-out);
+
+							border-bottom: ($barHeight - $itemMargin)/2 solid transparent;
+							border-left: $menuArrowWidth solid $arrowShadowColor;
+							border-top: ($barHeight - $itemMargin)/2 solid transparent;
+							display: hidden;
+							height: 0; 
+							margin-left: $arrowShadow;
+							opacity: $arrowShadowOpacity;
+							position: absolute;
+							width: 0; 
+							z-index: 1;
+						}
+					}
+				}
+
+				.lfr-nav-item:nth-child(even) {
+					.aeto-menu-bar-item {
+						background: $menuOffColor;
+					}
+
+					.main-arrow { 
+						border-left: $arrowWidth solid $menuOffColor;
+					}
+				}
+
+				.lfr-nav-item:nth-child(1) {
+					@include animation(item1-enter $menuItemSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 7} 1 forwards);
+
+					min-width: $menuItemMinWidth1;
+					width: $menuItemWidth1;
+					z-index: 10;
+
+					a {
+						width: calc(100% - #{$totalLogoWidth - $menuArrowWidth - $arrowShadow} - #{$menuItemWidthOffset});
+					}
+
+					.background-arrow {
+						@include animation(arrow-shadow-enter $menuItemShadowSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 7 + $menuItemShadowDelay} 1 forwards);
+					}
+				}
+
+				.lfr-nav-item:nth-child(2) {
+					@include animation(item2-enter $menuItemSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 6} 1 forwards);
+
+					min-width: $menuItemMinWidth2;
+					width: $menuItemWidth2;
+					z-index: 9;
+
+					a {
+						width: calc((100% - #{$totalLogoWidth})/2 + #{$menuArrowWidth + $arrowShadow} - #{$menuItemWidthOffset/2});
+					}
+
+					.background-arrow {
+						@include animation(arrow-shadow-enter $menuItemShadowSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 6 + $menuItemShadowDelay} 1 forwards);
+					}
+				}
+
+				.lfr-nav-item:nth-child(3) {
+					@include animation(item3-enter $menuItemSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 5} 1 forwards);
+
+					min-width: $menuItemMinWidth3;
+					width: $menuItemWidth3;
+					z-index: 8;
+
+					a {
+						width: calc((100% - #{$totalLogoWidth})/3 + #{$menuArrowWidth + $arrowShadow} - #{$menuItemWidthOffset/2});
+					}
+
+					.background-arrow {
+						@include animation(arrow-shadow-enter $menuItemShadowSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 5 + $menuItemShadowDelay} 1 forwards);
+					}
+				}
+
+				.lfr-nav-item:nth-child(4) {
+					@include animation(item4-enter $menuItemSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 4} 1 forwards);
+
+					min-width: $menuItemMinWidth4;
+					width: $menuItemWidth4;
+					z-index: 7;
+
+					a {
+						width: calc((100% - #{$totalLogoWidth})/4 + #{$menuArrowWidth + $arrowShadow} - #{$menuItemWidthOffset/2});
+					}
+
+					.background-arrow {
+						@include animation(arrow-shadow-enter $menuItemShadowSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 4 + $menuItemShadowDelay} 1 forwards);
+					}
+				}
+
+				.lfr-nav-item:nth-child(5) {
+					@include animation(item5-enter $menuItemSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 3} 1 forwards);
+
+					min-width: $menuItemMinWidth5;
+					width: $menuItemWidth5;
+					z-index: 6;
+
+					a {
+						width: calc((100% - #{$totalLogoWidth})/5 + #{$menuArrowWidth + $arrowShadow} - #{$menuItemWidthOffset/2});
+					}
+
+					.background-arrow {
+						@include animation(arrow-shadow-enter $menuItemShadowSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 3 + $menuItemShadowDelay} 1 forwards);
+					}
+				}
+
+				.lfr-nav-item:nth-child(6) {
+					@include animation(item6-enter $menuItemSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 2} 1 forwards);
+
+					min-width: $menuItemMinWidth6;
+					width: $menuItemWidth6;
+					z-index: 5;
+
+					a {
+						width: calc((100% - #{$totalLogoWidth})/6 + #{$menuArrowWidth + $arrowShadow} - #{$menuItemWidthOffset/2});
+					}
+
+					.background-arrow {
+						@include animation(arrow-shadow-enter $menuItemShadowSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 2 + $menuItemShadowDelay} 1 forwards);
+					}
+				}
+
+				.lfr-nav-item:nth-child(7) {
+					@include animation(item7-enter $menuItemSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 1} 1 forwards);
+
+					min-width: $menuItemMinWidth7;
+					width: $menuItemWidth7;
+					z-index: 4;
+
+					a {
+						width: calc((100% - #{$totalLogoWidth})/7 + #{$menuArrowWidth + $arrowShadow} - #{$menuItemWidthOffset/2});
+					}
+
+					.background-arrow {
+						@include animation(arrow-shadow-enter $menuItemShadowSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 1 + $menuItemShadowDelay} 1 forwards);
+					}
+				}
+
+				.lfr-nav-item:nth-child(8) {
+					@include animation(item8-enter $menuItemSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 0} 1 forwards);
+
+					min-width: $menuItemMinWidth8;
+					width: $menuItemWidth8;
+					z-index: 3;
+
+					a {
+						width: calc((100% - #{$totalLogoWidth})/8 + #{$menuArrowWidth + $arrowShadow} - #{$menuItemWidthOffset/2});
+					}
+
+					.background-arrow {
+						@include animation(arrow-shadow-enter $menuItemShadowSpeed ease-in-out #{$startDelay + $baseMenuDelay + $menuItemDelay * 0 + $menuItemShadowDelay} 1 forwards);
+					}
+				}
+			}
+		}
+	}
+}
+
+$sectionColor: #A9A9A9;
+$signInFrontWidth: 100px;
+
+// Liferay Override 
+
+.yui3-widget-mask {
+	display: none;
+}
+
+#signinmodal {
+	position: absolute; 
+	overflow: hidden; 
+	clip: rect(0 0 0 0); 
+	height: 1px; width: 1px; 
+	margin: -1px; padding: 0; border: 0;
+	outline: 0;
+}
+
+// Login Styling
+
+.aeto-login-container {
+	@include animation(signin-enter .35s ease-in-out #{$startDelay + 3.1s} forwards);
+	@include transition-duration(.45s);
+	@include transition-property(all);
+	@include transition-timing-function(ease-in-out);
+
+	display: inline-block;
+	height: $barHeight;
+	position: absolute;
+	z-index: 11;
+	width: calc(100% - #{-$arrowWidth});
+	right: calc(100% - #{$signInFrontWidth + $arrowWidth});
+	
+	.login-content {
+		@include box-shadow(25px 0 0 0 $sectionColor);
+		@include transition-duration(.45s);
+		@include transition-property(all);
+		@include transition-timing-function(ease-in-out);
+
+		display: inline-block;
+		height: $barHeight;
+		margin-left: -4px;
+
+		.login-frontside {
+			@include transition-duration(.35s);
+			@include transition-property(all);
+			@include transition-timing-function(ease-in-out);
+
+			background: $sectionColor;
+			cursor: pointer;
+			float: left;
+			height: $barHeight;
+			outline: none;
+			text-decoration: none;
+			width: $signInFrontWidth;
+
+			&:hover {
+				text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+			}
+
+			.login-text {
+				color: #FFF;
+				font-family: 'Montserrat', sans-serif;
+				font-size: 22px;
+				height: $barHeight;
+				line-height: 56px;
+				margin-left: 3px;
+				margin-top: 1px;
+				position: relative;
+				text-align: center;
+				width: $signInFrontWidth;
+				z-index: 2;
+			}
+		}
+
+		&:before, &:after {
+			color: #FFF;
+			content: "\f100";
+			font-family: 'fontawesome-alloy';
+			font-size: 34px;
+			left: 32px;
+			line-height: $barHeight;
+			margin-top: -1px;
+			position: absolute;
+			z-index: 4;
+		}
+
+		&:after {
+			left: 150px;
+		}
+	}
+
+	.login-content.reverse-double-arrows:after {
+		content: "\f101";
+	}
+	
+	.arrow-edge {
+		display: inline-block;
+		width: $menuArrowWidth;
+		height: $barHeight;
+
+		.main-arrow {
+			border-bottom: $barHeight/2 solid transparent;
+			border-right: $menuArrowWidth solid $sectionColor;
+			border-top: $barHeight/2 solid transparent;
+			height: 0; 
+			position: absolute;
+			width: 0; 
+			z-index: 2;
+		}
+
+		.background-arrow {
+			@include box-shadow(10px 0 0 0 #DADADA);
+			@include transition-duration(.35s);
+			@include transition-property(all);
+			@include transition-timing-function(ease-in-out);
+
+			border-bottom: $barHeight/2 solid transparent;
+			border-right: 0 solid #DADADA;
+			border-top: $barHeight/2 solid transparent;
+			float: right;
+			height: 0; 
+			left: -10px;
+			position: relative;
+			width: 0;
+			z-index: 1;
+		}
+	}
+
+	.modal-content {
+		@include border-radius(0);
+		@include box-shadow(1px 0 0 0 $sectionColor);
+
+		background: $sectionColor;
+		border: none;
+		display: inline-block;
+		left: 20px !important;
+		margin: 0;
+		position: relative;
+		top: 0 !important;
+		height: $barHeight !important;
+		width: calc(100% - #{$signInFrontWidth + $arrowWidth + 24}) !important;
+
+		.modal-header {
+			display: none;
+		}
+
+		.modal-body {
+			height: $barHeight;
+			overflow-y: visible;
+			padding: 0;
+		}
+
+		.sign-in-form {
+			display: inline-block;
+
+			.fieldset {
+				display: inline-block;
+				margin-left: 50px;
+				vertical-align: top;
+
+				.control-label {
+					display: none;
+				}
+
+				.control-group, .checkbox {
+					display: inline-block;
+					line-height: $barHeight;
+					vertical-align: top;
+				}
+			}
+			
+			.button-holder {
+				margin: 0;
+				display: inline-block;
+			}
+		}
+		
+		.navigation {
+			display: inline-block;
+		}
+
+		.yui3-resize-handle-inner {
+			display: none;
+		}
+	}
+}
+
+.aui .dockbar-split .dockbar .navbar-inner .nav.nav-account-controls {
+	// @include animation(signin-enter .35s ease-in-out #{$startDelay + 3.1s} forwards);
+	@include box-shadow(20px 0 0 0 $sectionColor);
+	@include transition-duration(.35s);
+	@include transition-property(all);
+	@include transition-timing-function(ease-in-out);
+
+	// background: $sectionColor;
+	// border: 0;
+	// height: $barHeight;
+	// opacity: 0;
+	// right: 0;
+
+	&:hover {
+		margin-right: 20px;
+	}
+
+	.sign-in {
+		display: none;
+		background: none;
+
+		&:before {
+			content: "";
+			border-bottom: $barHeight/2 solid transparent;
+			border-right: $arrowWidth solid $sectionColor;
+			border-top: $barHeight/2 solid transparent;
+			height: 0; 
+			position: absolute;
+			width: 0; 
+			margin-left: -$arrowWidth;
+		}
+
+		a {
+			color: #FFF;
+			line-height: $barHeight;
+			font-size: 18px;
+			font-family: 'Muli', sans-serif;
+			text-transform: uppercase;
+			/* left: -5px; */
+			position: relative;
+			padding: 0 20px 0 15px;
+
+			i {
+				font-size: 24px;
+				position: relative;
+				top: 2px;
+				left: -5px;
+			}
+		}
+	}
+}
+
+// Animations 
+
+@include keyframes(bg-enter) {
+    0% {
+    	left: 100%;
+    	opacity: 1;
+    }
+    100% {
+    	left: -#{$arrowShadow + $arrowWidth};
+    	opacity: 1;
+    }
+}
+
+@include keyframes(stripe-enter) {
+    0% {
+    	right: 100%;
+    	opacity: 1;
+    }
+    100% {
+    	right: -#{$arrowShadow + $arrowWidth};
+    	opacity: 1;
+    }
+}
+
+@include keyframes(logo-enter) {
+    0% {
+    	transform: rotate(80deg);
+    	opacity: 0;
+    }
+    70% {
+    	transform: rotate(-10deg);
+    	opacity: 1;
+    }
+    100% {
+    	transform: rotate(0deg);
+    	opacity: 1;
+    }
+}
+
+// Menu Item Animations
+
+@include keyframes(item1-enter) {
+    0% {
+    	left: $menuItemMargin1;
+    	opacity: 1;
+    }
+    100% {
+    	left: 0;
+    	opacity: 1;
+    }
+}
+
+@include keyframes(item2-enter) {
+    0% {
+    	left: $menuItemMargin2;
+    	opacity: 1;
+    }
+    100% {
+    	left: 0;
+    	opacity: 1;
+    }
+}
+
+@include keyframes(item3-enter) {
+    0% {
+    	left: $menuItemMargin3;
+    	opacity: 1;
+    }
+    100% {
+    	left: 0;
+    	opacity: 1;
+    }
+}
+
+@include keyframes(item4-enter) {
+    0% {
+    	left: $menuItemMargin4;
+    	opacity: 1;
+    }
+    100% {
+    	left: 0;
+    	opacity: 1;
+    }
+}
+
+
+@include keyframes(item5-enter) {
+    0% {
+    	left: $menuItemMargin5;
+    	opacity: 1;
+    }
+    100% {
+    	left: 0;
+    	opacity: 1;
+    }
+}
+
+@include keyframes(item6-enter) {
+    0% {
+    	left: $menuItemMargin6;
+    	opacity: 1;
+    }
+    100% {
+    	left: 0;
+    	opacity: 1;
+    }
+}
+
+@include keyframes(item7-enter) {
+    0% {
+    	left: $menuItemMargin7;
+    	opacity: 1;
+    }
+    100% {
+    	left: 0;
+    	opacity: 1;
+    }
+}
+
+@include keyframes(item8-enter) {
+    0% {
+    	left: $menuItemMargin8;
+    	opacity: 1;
+    }
+    100% {
+    	left: 0;
+    	opacity: 1;
+    }
+}
+
+@include keyframes(signin-enter) {
+    0% {
+    	left: 100%;
+    	opacity: 1;
+    }
+    100% {
+    	left: calc(100% - #{$signInFrontWidth + $arrowWidth});	
+    	opacity: 1;
+    }
+}
+
+
+@include keyframes(arrow-shadow-enter) {
+	0% {
+		//border-left: 0 solid $arrowShadowColor;
+		display: block;
+		margin-left: 0;
+
+	}
+	70%{
+		//border-left: $arrowWidth+10px solid $arrowShadowColor;
+		display: block;
+		margin-left: $arrowShadow + $menuItemShadowAnim;
+	}
+	100% {
+		//border-left: $arrowWidth solid $arrowShadowColor;
+		display: block;
+		margin-left: $arrowShadow;
+	}
+}
+
+@include keyframes(arrow-shadow-wiggle) {
+	0% {
+		border-left: $menuArrowWidth solid $arrowShadowColor;
+	}
+	50%{
+		border-left: #{$menuArrowWidth - 15px} solid $arrowShadowColor;
+	}
+	100% {
+		border-left: $menuArrowWidth solid $arrowShadowColor;
+	}
+}
+
+@include keyframes(arrow-pulsation) {
+	0% {
+		opacity: $innerArrowOpacity;
+	}
+	50% {
+		opacity: $innerArrowOpacity/2;
+	}
+	100% {
+		opacity: $innerArrowOpacity;
+	}
+}
+
+@include keyframes(logo-text-enter) {
+	0% {
+		@include transform(translateY(-20px));
+
+		opacity: 0;
+	}
+	100% {
+		@include transform(translateY(0));
+
+		opacity: 1;
+	}
+}
+
+@include keyframes(letter-rotate) {
+	0% {
+		@include transform(rotateY(360deg));
+	}
+	100% {
+		@include transform(rotateY(0));
+	}
+}
+
+.temporary-page {
+	background: #FFF;
+	height: 100%;
+
+	// .page {
+	// 	@include box-shadow(0 0 3px 5px rgba(0, 0, 0, 0.2));
+
+	// 	width: 50%;
+	// 	height: 80%;
+	// 	background: white;
+	// 	margin: auto;
+	// 	top: 0;
+	// 	bottom: 0;
+	// 	position: absolute;
+	// 	left: 0;
+	// 	right: 0;
+	// }
+}
+
+$error-color: #FFE07E;
+$overallDelay: 3s;
+
+.error-box-container {
+	@include animation(error-box-anim .75s ease-in-out $overallDelay 1 forwards);
+	
+	position: absolute;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 5;
+	width: 400px;
+	height: 100px;
+	visibility: hidden;
+
+	.error-box {
+		@include animation-delay($overallDelay);
+		@include transition-duration(.35s);
+		@include transition-property(all);
+		@include transition-timing-function(ease-in-out);
+		@include box-shadow(0px 0px 7px 0px rgba(0,0,0,0.20));
+
+		border-top: 15px solid $error-color;
+		background: #FFF;
+		width: 100%;
+		height: 100%;
+		
+		position: relative;
+		margin-top: -200px;
+	}
+
+	.error-icon {
+		@include animation(error-icon-anim .85s ease-in-out #{$overallDelay + .65s} 1 forwards, error-icon-rotate 1.35s ease-in-out #{$overallDelay + 1.65s} 1 forwards);
+		@include border-radius(50%);
+		@include box-shadow(0px 0px 0px 5px #FFF, 0px 0px 0px 10px $error-color);
+
+		color: #FFF;
+		background: $error-color;
+		bottom: 0;
+		height: 45px;
+		left: 25px;
+		margin: auto;
+		position: absolute;
+		top: 0;
+		width: 45px;
+		visibility: hidden;
+		
+		&:before {
+			content: "\f071";
+			font-size: 28px;
+			font-family: 'fontawesome-alloy';
+			top: 12px;
+			left: 8px;
+			position: relative;
+		}
+	}
+
+	.error-message {
+		bottom: 0;
+		color: rgb(150, 150, 150);
+		display: table-cell;
+		font-size: 18px;
+		height: 100px;
+		padding-left: 100px;
+		position: relative;
+		right: 0px;
+		top: 0;
+		vertical-align: middle;
+		width: 275px;
+	}
+}
+
+@include keyframes(error-box-anim) {
+    0% {
+    	@include transform(translateY(-100px));
+
+    	visibility: visible;
+    	opacity: 0;
+    }
+    100% {
+    	@include transform(translateY(0));
+    	
+    	visibility: visible;
+    	opacity: 1;
+    }
+}
+
+@include keyframes(error-icon-anim) {
+    0% {
+    	@include transform(scale(0));
+    	
+    	visibility: visible;
+    	opacity: 0;
+    }
+    50% {
+    	@include transform(scale(1.5));
+
+    	visibility: visible;
+    }
+    100% {
+    	@include transform(scale(1));
+    	
+    	opacity: 1;
+    	visibility: visible;
+    }
+}
+
+
+@include keyframes(error-icon-rotate) {
+    0% {
+    	@include transform(rotate(0));
+
+    	visibility: visible;
+    }
+    100% {
+    	@include transform(rotate(720deg));
+
+    	visibility: visible;
+    }
+}

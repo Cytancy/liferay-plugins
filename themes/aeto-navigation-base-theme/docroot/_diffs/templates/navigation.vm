@@ -1,0 +1,136 @@
+<nav class="$nav_css_class navbar site-navigation" id="navigation" role="navigation">
+	<div class="navbar-inner aeto-bar">
+
+		<div class="aeto-logo-container">
+			<div class="rotation-layer">
+				<div class="logo-box">
+					<div class="logo-icon-container"><img class="logo-icon" src="http://aethereternal.com/documents/10184/0/Crystal+Icon+Inverse/dea20f64-91e0-4599-a8c3-156424a08733?version=1.0&t=1414889258929"/></div>
+					<div class="logo-text">
+						<div>A</div>
+						<div>E</div>
+						<div>T</div>
+						<div>O</div>
+					</div>
+				</div>
+				<div class="arrow-edge">
+					<div class="main-arrow"></div>
+					<div class="white-arrow"></div>
+					<div class="color-arrow"></div>
+					<div class="background-arrow"></div>
+				</div>
+			</div>
+		</div>
+		<div class="collapse nav-collapse">
+			<ul aria-label="#language ("site-pages")" class="nav nav-collapse aeto-pages" role="menubar">
+				#foreach ($nav_item in $nav_items)
+						#set ($nav_item_attr_selected="")
+						#set ($nav_item_attr_has_popup="")
+						#set ($nav_item_caret="")
+						#set ($nav_item_css_class="lfr-nav-item")
+						#set ($nav_item_link_css_class="")
+
+					#if ($nav_item.isSelected())
+						#set ($nav_item_attr_selected="aria-selected='true'")
+						#set ($nav_item_css_class="$nav_item_css_class selected active")
+					#end
+
+					#if ($nav_item.hasChildren())
+						#set ($nav_item_attr_has_popup="aria-haspopup='true'")
+						#set ($nav_item_caret='<b class="icon-caret-down"></b>')
+						#set ($nav_item_css_class="$nav_item_css_class dropdown")
+						#set ($nav_item_link_css_class="dropdown-toggle")
+					#end
+
+
+					<li class="$nav_item_css_class" id="layout_$nav_item.getLayoutId()" $nav_item_attr_selected role="presentation">
+						<div class="aeto-menu-bar-item"></div>
+						<a aria-labelledby="layout_$nav_item.getLayoutId()" $nav_item_attr_has_popup class="$nav_item_link_css_class" href="$nav_item.getURL()" $nav_item.getTarget() role="menuitem">
+							<span>$nav_item.icon() $nav_item.getName() $nav_item_caret</span>
+						</a>
+
+						<div class="menu-arrow-edge">
+							<div class="main-arrow"></div>
+							<div class="color-arrow"></div>
+							<div class="background-arrow"></div>
+						</div>
+
+						#if ($nav_item.hasChildren())
+							<ul class="dropdown-menu child-menu" role="menu">
+								#foreach ($nav_child in $nav_item.getChildren())
+									#set ($nav_child_attr_selected="")
+									#set ($nav_child_css_class="lfr-nav-item")
+
+									#if ($nav_child.isSelected())
+										#set ($nav_child_attr_selected="aria-selected='true'")
+										#set ($nav_child_css_class="selected")
+									#end
+
+									<li class="$nav_child_css_class" id="layout_$nav_child.getLayoutId()" $nav_child_attr_selected role="presentation">
+										<a aria-labelledby="layout_$nav_child.getLayoutId()" href="$nav_child.getURL()" $nav_child.getTarget() role="menuitem">$nav_child.getName()</a>
+									</li>
+								#end
+							</ul>
+						#end
+					</li>
+				#end
+			</ul>
+		</div>
+		<div class="aeto-hover-bar-container">
+			<div class="left-hover-bar-container">
+				<div class="left-hover-bar">
+					<div class="inner-bar"></div>
+				</div>
+				<div class="arrow-edge">
+					<div class="main-arrow"></div>
+					<div class="color-arrow"></div>
+					<div class="background-arrow"></div>
+				</div>
+			</div>
+
+			<div class="right-hover-bar-container">
+				<div class="right-hover-bar">
+					<div class="inner-bar"></div>
+				</div>
+				<div class="arrow-edge">
+					<div class="main-arrow"></div>
+					<div class="color-arrow"></div>
+					<div class="background-arrow"></div>
+				</div>
+			</div>
+		</div>
+		<div class="aeto-login-container">
+			<div class="arrow-edge">
+				<div class="main-arrow"></div>
+				<div class="color-arrow"></div>
+				<div class="background-arrow"></div>
+			</div>
+			<div class="login-content">
+				<a data-redirect="false" class="login-frontside">
+					<div class="login-icon"></div>
+					<div class="login-text">LOGIN</div>
+				</a>
+			</div>
+			
+		</div>
+		<div class="aeto-final-stripe-container">
+			<div class="aeto-final-stripe"></div>
+			<div class="arrow-edge">
+				<div class="main-arrow"></div>
+				<div class="color-arrow"></div>
+				<div class="background-arrow"></div>
+			</div>
+		</div>
+		<div class="aeto-bar-bg-container">
+			<div class="arrow-edge">
+				<div class="main-arrow"></div>
+				<div class="color-arrow"></div>
+				<div class="background-arrow"></div>
+			</div>
+			<div class="aeto-bar-bg"></div>
+		</div>
+	</div>
+</nav>
+
+<script>
+	Liferay.Data.NAV_LIST_SELECTOR = '.navbar-inner .nav-collapse > ul';
+</script>
