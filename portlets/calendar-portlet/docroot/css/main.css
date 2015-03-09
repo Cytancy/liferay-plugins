@@ -127,16 +127,28 @@
 			top: 0;
 			width: 10px;
 
+			@include respond-to(phone) {
+				height: 30px;
+				margin: 0;
+				position: relative;
+				width: 100%;
+			}
+
 			&:hover {
 				background: #E9E9E9;
 				cursor: pointer;
 			}
 
-			.icon-caret-right, .icon-caret-left {
+			.icon-caret-right, .icon-caret-left, .icon-caret-up, .icon-caret-down {
 				left: 50%;
-				margin: -14px 0 0 -1px;
+				margin-left: -5px;
 				position: absolute;
 				top: 50%;
+
+				@include respond-to(phone) {
+					margin-top: 6px;
+					top: 0;
+				}
 			}
 		}
 
@@ -366,8 +378,80 @@
 
 .scheduler-base-controls .calendar-add-event-btn {
 	margin-right: 3px;
+
+	@include respond-to(phone) {
+		@include border-top-right-radius(0);
+		@include border-bottom-right-radius(0);
+
+		margin-right: 0;
+	}
 }
 
+.calendar-portlet .scheduler-base-controls .scheduler-base-view-date {
+	@include respond-to(phone) {
+		font-size: 16px;
+		margin: 16px 0 10px 0;
+		text-align: left;
+		width: 100%;
+	}
+}
+
+.scheduler-base-controls .scheduler-base-today {
+	@include respond-to(phone) {
+		@include border-top-left-radius(0);
+		@include border-bottom-left-radius(0);
+
+		margin-left: -1px;
+	}
+}
+
+.scheduler-base-controls {
+	.btn {
+		@include respond-to(phone) {
+			margin-top: 0;
+			width: 100%;
+		}
+	}
+
+	.btn-group {
+		@include respond-to(phone) {
+			margin-top: 8px;
+		}
+	}
+}
+
+.signed-in .scheduler-base-controls {
+	.btn {
+		@include respond-to(phone) {
+			margin-top: 0;
+			width: 50%;
+		}
+	}
+}
+
+.scheduler-base-content .scheduler-base-hd {
+	@include respond-to(phone) {
+		padding-top: 2px;
+	}
+}
+
+.calendar-portlet .scheduler-base-content .scheduler-base-views {
+	@include respond-to(phone) {
+		height: 39px;
+		margin-top: 0;
+		overflow-y: auto;
+		position: absolute;
+		right: 0;
+		top: 103px;
+		width: 40%;
+	}
+
+	.btn {
+		@include respond-to(phone) {
+			margin-top: 0;
+		}
+	}
+}
 .scheduler-event-past {
 	@include opacity(0.4);
 }

@@ -210,6 +210,53 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 		Liferay.CalendarUtil.syncCalendarsMap(calendarLists);
 	}
 
+	var htmlNode = A.one('.aui');
+	var caretNode = null;
+	var togglerNode = A.one('.calendar-portlet-column-toggler');
+
+	var collapseOnResize = function() {
+		if (htmlNode.hasClass('view-lt720')) {
+			caretNode = togglerNode.one('.icon-caret-right');
+
+			if (caretNode) {
+				caretNode.replaceClass('icon-caret-right', 'icon-caret-down');
+			}
+
+			caretNode = togglerNode.one('.icon-caret-left');
+
+			if (caretNode) {
+				caretNode.replaceClass('icon-caret-left', 'icon-caret-up');
+			}
+
+			togglerNode.addClass('btn');
+			togglerNode.addClass('btn-default');
+		}
+		else if (htmlNode.hasClass('view-gt720')) {
+			caretNode = togglerNode.one('.icon-caret-down');
+
+			if (caretNode) {
+				caretNode.replaceClass('icon-caret-down', 'icon-caret-right');
+			}
+
+			caretNode = togglerNode.one('.icon-caret-up');
+
+			if (caretNode) {
+				caretNode.replaceClass('icon-caret-up', 'icon-caret-left');
+			}
+
+			togglerNode.removeClass('btn');
+			togglerNode.removeClass('btn-default');
+		}
+	};
+
+	A.all('.glyphicon-chevron-left').replaceClass('glyphicon-chevron-left', 'icon-chevron-left');
+	A.all('.glyphicon-chevron-right').replaceClass('glyphicon-chevron-right', 'icon-chevron-right');
+
+	var resizeCollapser = A.getWin().on(
+		['resize', 'load'],
+		A.debounce(collapseOnResize, 100)
+	);
+
 	window.<portlet:namespace />syncCalendarsMap = syncCalendarsMap;
 
 	window.<portlet:namespace />calendarLists = {};
@@ -358,7 +405,13 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 			columnOptions.toggleClass('hide');
 
-			columnTogglerIcon.toggleClass('icon-caret-left').toggleClass('icon-caret-right');
+			if (columnTogglerIcon.hasClass('icon-caret-left') || columnTogglerIcon.hasClass('icon-caret-right')) {
+				columnTogglerIcon.toggleClass('icon-caret-left').toggleClass('icon-caret-right');
+			}
+
+			if (columnTogglerIcon.hasClass('icon-caret-up') || columnTogglerIcon.hasClass('icon-caret-down')) {
+				columnTogglerIcon.toggleClass('icon-caret-up').toggleClass('icon-caret-down');
+			}
 		}
 	);
 </aui:script>
